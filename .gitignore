@@ -23,4 +23,8 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+/core/target/
+/domain/target/
+/plugins/target/
+/web/target/
 /core/src/main/resources/secret.properties
