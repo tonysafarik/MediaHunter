@@ -8,4 +8,16 @@
     </parent>
     <artifactId>web</artifactId>
     <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>domain</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 </project>
