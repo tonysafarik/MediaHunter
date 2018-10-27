@@ -2,6 +2,12 @@ body {
   margin: 0;
 }
 
+.content_title {
+  text-align: center;
+  font-family: calibri;
+  font-weight: normal;
+}
+
 #menu {
   margin: 0 auto;
   height: 40px;
@@ -38,4 +44,11 @@ body {
   display: block;
   height: 100%;
   width: 100%;
+}
+
+.home_description {
+  width: 70%;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: 'Times New Roman', Times, serif;
 }
