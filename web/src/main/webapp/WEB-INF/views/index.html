@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html layout:decorate="~{layouts/main_layout}">
     <head>
-        <title>Thymeleaf running</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home</title>
     </head>
     <body>
-        <div>Thymeleaf running</div>
+        <div layout:fragment="content">
+            <div th:replace="fragments/home/home :: home"></div>
+        </div>
     </body>
 </html>
