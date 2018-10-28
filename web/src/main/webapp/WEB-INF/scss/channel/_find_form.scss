@@ -1,0 +1,27 @@
+.find_form {
+    width: 50%;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+
+    input {
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        border-radius: 4px;
+        box-sizing: border-box;
+        font-family: calibri;
+        font-size: 1.2em;
+        padding: 12px 20px;
+    }
+
+    input[type=text] {
+        margin: 0px 0 20px 0;
+        text-align: center;
+    }
+
+    input[type=submit] {
+        background-color: #DDD;
+        cursor: pointer;
+    }
+}

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html layout:decorate="~{/layouts/main_layout}">
+
+<head>
+    <title>Find channels</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <h1 class="content_title">Find channel:</h1>
+        <div th:replace="channel/fragments/find_fragment :: channelFindForm_v1"></div>
+    </div>
+</body>
+
+</html>

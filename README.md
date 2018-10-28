@@ -22,7 +22,7 @@ Then you can run this project from bash using `mvn clean install && cd /web && m
 - [ ] Web module
 - - [ ] Create Home page
 - - - [x] Write static content - project description
-- - - [ ] Insert all dynamic content to project description
+- - - [ ] Insert dynamic content to project description
 - - [ ] Create pages and controller for Channels
 - - - [ ] Find channel (from MCP and DB)
 - - - [ ] Add channel (from find channel, if it's not in DB already, add all its records)
