@@ -34,7 +34,7 @@ Then you can run this project from bash using `mvn clean install && cd /web && m
 - - - [ ] Update record (update from MCP to DB)
 - - - [ ] Delete record
 - - - [ ] Record queue
-- - [ ] Create error handling (at least 404)
+- - [x] Create error handling (at least 404)
 - - [ ] Create Rest controller for public access
 - - [ ] Create Admin Facade layer providing all necessary admin methods
 - - [ ] Create Public Facade layer providing all methods for public REST API
