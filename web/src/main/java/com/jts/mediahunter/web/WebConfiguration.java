@@ -22,10 +22,6 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Autowired
     private ApplicationContext applicationContext;
     
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
-    }
     
     // ***************************************
     // ******* THYMELEAF CONFIGURATION *******
