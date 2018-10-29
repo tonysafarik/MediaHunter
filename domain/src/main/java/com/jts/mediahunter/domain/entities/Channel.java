@@ -50,12 +50,12 @@ public class Channel {
     /**
      * number of all media on this channel (no matter if accepted or not)
      */
-    private Long recordCount = 0l;
+    @Builder.Default private Long recordCount = 0l;
 
     /**
      * number of accepted media from this channel
      */
-    private Long acceptedRecordCount = 0l;
+    @Builder.Default private Long acceptedRecordCount = 0l;
     
     /**
      * date and time of last record upload (no matter if waiting, accepted or rejected)
