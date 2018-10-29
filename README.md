@@ -47,6 +47,7 @@ Then you can run this project from bash using `mvn clean install && cd /web && m
 - - [ ] Create Database service providing all necessary DB operations
 - - [ ] Create Plugin service associating all plugins and providing necessary operations
 - [ ] Domain module
-- - [ ] Create DB entities (Channel, Record) and DTOs for administration, REST, ...
+- - [ ] Create DB entities (Channel, Record)
+- - [ ] Create DTOs
 
 List is updated as needed.
