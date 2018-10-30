@@ -53,7 +53,7 @@ public class YouTubeTests {
     }
 
     @Test
-    public void testFindChannelById() {
+    public void getChannelByExternalIdCorrect() {
         List<Channel> channel = yt.getChannelByExternalId("UCZdunuduJOFxxK0R41o4X-A");
 
         Channel channelToCompare = Channel.builder()
@@ -67,9 +67,9 @@ public class YouTubeTests {
     }
 
     @Test
-    public void testFindRecordById() {
+    public void getRecordByExternalIdCorrect() {
         List<Record> record = yt.getRecordByExternalId("wvJPLXmRrpk");
-        
+
         Record recordToCompare = Record.builder()
                 .description("The hard core of HBOK crew, Cajt, is blading almost every day. He started skating about 20 years ago, and he's still killing it!")
                 .externalId("wvJPLXmRrpk")
@@ -82,6 +82,19 @@ public class YouTubeTests {
                 .build();
 
         assertThat(record.get(0)).isNotNull().isEqualToComparingFieldByField(recordToCompare);
+    }
+
+    @Test
+    public void getAllChannelRecordsCorrect() {
+        List<Record> records = yt.getAllChannelRecords("UCZdunuduJOFxxK0R41o4X-A");
+
+        assertThat(records).hasSize(40).extracting("nameOfRecord").contains("JEDLA - 2011 - HBOK crew",
+                "ONE MINUTE EDIT - Martin \"Santos\" Charvát",
+                "Tom - One Trick",
+                "Filip Samsonek - HBOK crew - Still Here, Still Blading",
+                "Jiří Rygál - HBOK crew - Still Here, Still Blading");
+        assertThat(records).extracting("nameOfMcp").containsOnly("YouTube");
+        assertThat(records).extracting("uploaderExternalId").containsOnly("UCZdunuduJOFxxK0R41o4X-A");
     }
 
 }

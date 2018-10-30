@@ -33,9 +33,18 @@ public interface MediaContentProviderPlugin {
     public List<Record> getRecordByExternalId(String recordId);
 
     /**
-     *  
-     * @return String with name of Media Content Provider (MCP) 
+     *
+     * @return String with name of Media Content Provider (MCP)
      */
     public String getMcpName();
-    
+
+    /**
+     * Finds all records uploaded by this channel until the time this method is
+     * called.
+     *
+     * @param channelId external id of the channel
+     * @return List of Record entities
+     */
+    public List<Record> getAllChannelRecords(String channelId);
+
 }

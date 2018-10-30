@@ -4,10 +4,13 @@ import com.jts.mediahunter.domain.entities.Channel;
 import com.jts.mediahunter.domain.entities.Record;
 import com.jts.mediahunter.plugins.MediaContentProviderPlugin;
 import com.jts.mediahunter.plugins.youtube.dto.YouTubeChannelList;
+import com.jts.mediahunter.plugins.youtube.dto.YouTubeRecord;
 import com.jts.mediahunter.plugins.youtube.dto.YouTubeRecordList;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -60,7 +63,7 @@ public class YouTube implements MediaContentProviderPlugin {
                 );
             });
         }
-        
+
         return channels;
     }
 
@@ -94,17 +97,8 @@ public class YouTube implements MediaContentProviderPlugin {
         List<Record> videos = new ArrayList<>();
 
         if (videoList != null) {
-            videoList.getRecords().forEach((video) -> {
-                videos.add(Record.builder()
-                        .uploaderExternalId(video.getUploaderExternalId())
-                        .description(video.getDescription())
-                        .nameOfRecord(video.getName())
-                        .nameOfMcp(SERVICE_NAME)
-                        .externalId(video.getVideoId())
-                        .thumbnail(video.getThumbnail())
-                        .uploadTime(video.getUploadTime())
-                        .uri(video.getURI())
-                        .build());
+            videoList.getRecords().forEach((record) -> {
+                videos.add(youTubeRecordToRecord(record));
             });
         }
 
@@ -114,6 +108,78 @@ public class YouTube implements MediaContentProviderPlugin {
     @Override
     public String getMcpName() {
         return this.SERVICE_NAME;
+    }
+
+    private Record youTubeRecordToRecord(YouTubeRecord record) {
+        return Record.builder()
+                .description(record.getDescription())
+                .externalId(record.getVideoId())
+                .nameOfMcp(this.SERVICE_NAME)
+                .nameOfRecord(record.getName())
+                .thumbnail(record.getThumbnail())
+                .uploadTime(record.getUploadTime())
+                .uploaderExternalId(record.getUploaderExternalId())
+                .uri(record.getURI())
+                .build();
+    }
+
+    @Override
+    public List<Record> getAllChannelRecords(String channelId) {
+        String playListId = getChannelsUploadListId(channelId);
+
+        if (playListId == null) {
+            return new ArrayList<>();
+        }
+
+        String[] parameters = {"part", "snippet", "maxResults", "50", "playlistId", playListId, "key", API_KEY};
+
+        URI uri = buildURIForHTTPRequest("/playlistItems", parameters);
+
+        YouTubeRecordList videoList = rest.getForObject(uri, YouTubeRecordList.class);
+
+        List<Record> videos = new ArrayList<>();
+        
+        if (videoList == null) {
+            return videos;
+        }
+        
+        for (YouTubeRecord record : videoList.getRecords()) {
+            videos.add(youTubeRecordToRecord(record));
+        }
+        
+        while (videoList.getNextPageTogen() != null) {
+            parameters = Arrays.copyOf(parameters, parameters.length + 2);
+            parameters[8] = "pageToken";
+            parameters[9] = videoList.getNextPageTogen();
+
+            uri = buildURIForHTTPRequest("/playlistItems", parameters);
+
+            videoList = rest.getForObject(uri, YouTubeRecordList.class);
+            if (videoList != null) {
+                for (YouTubeRecord record : videoList.getRecords()) {
+                    videos.add(youTubeRecordToRecord(record));
+                }
+            }
+        }
+        return videos;
+    }
+
+    private String getChannelsUploadListId(String id) {
+        String[] parameters = {"part", "contentDetails", "id", id, "key", API_KEY};
+
+        URI uri = buildURIForHTTPRequest("/channels", parameters);
+
+        Map<String, Object> json = rest.getForObject(uri, Map.class);
+
+        if ((json == null)
+                || (!json.containsKey("items"))
+                || (((ArrayList) json.get("items")).get(0) == null)
+                || (!(json = (Map<String, Object>) ((ArrayList) json.get("items")).get(0)).containsKey("contentDetails"))
+                || (!(json = (Map<String, Object>) json.get("contentDetails")).containsKey("relatedPlaylists"))
+                || (!(json = (Map<String, Object>) json.get("relatedPlaylists")).containsKey("uploads"))) {
+            return null;
+        }
+        return (String) json.get("uploads");
     }
 
 }

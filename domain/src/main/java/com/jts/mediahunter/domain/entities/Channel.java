@@ -61,5 +61,8 @@ public class Channel {
      * date and time of last record upload (no matter if waiting, accepted or rejected)
      */
     private LocalDateTime lastRecordUpload;
+
+    @NonNull
+    @Builder.Default private boolean trusted = false;
     
 }
