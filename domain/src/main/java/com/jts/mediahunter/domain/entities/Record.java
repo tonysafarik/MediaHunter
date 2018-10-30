@@ -1,5 +1,6 @@
 package com.jts.mediahunter.domain.entities;
 
+import com.jts.mediahunter.domain.Thumbnail;
 import java.net.URI;
 import java.time.LocalDateTime;
 import lombok.Builder;
@@ -55,9 +56,9 @@ public class Record {
     private URI uri;
 
     /**
-     * URL of thumbnail picture (if available)
+     * URIs of thumbnail pictures (if available)
      */
-    private URI thumbnail;
+    private Thumbnail thumbnail;
 
     /**
      * date and time of upload of the record (used for sorting)

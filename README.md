@@ -39,8 +39,8 @@ Then you can run this project from bash using `mvn clean install && cd /web && m
 - - [ ] Create Admin Facade layer providing all necessary admin methods
 - - [ ] Create Public Facade layer providing all methods for public REST API
 - [ ] Plugins module
-- - [ ] Create plugin interface
-- - [ ] Implement plugin for YouTube
+- - [x] Create plugin interface
+- - [x] Implement plugin for YouTube
 - - [ ] Implement plugin for Vimeo
 - [ ] Core module
 - - [x] Create persistence layer

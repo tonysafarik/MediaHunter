@@ -27,6 +27,7 @@
 /domain/target/
 /plugins/target/
 /web/target/
-/core/src/main/resources/secret.properties
+/plugins/src/main/resources/secret.properties
 README.html
 /core/nbproject/
+/plugins/nbproject/
