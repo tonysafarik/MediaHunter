@@ -11,14 +11,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 /**
  * Entity for Channels from any service that has plugin implemented in the
  * plugins module
- * 
+ *
  * @author Tony
  */
 @Data
 @Builder
 @Document
 public class Channel {
-    
+
     /**
      * Internal ID
      */
@@ -35,8 +35,8 @@ public class Channel {
     private String nameOfChannel;
 
     /**
-     * name of the media content provider (MCP) (must be unified for all media from one
-     * service!)
+     * name of the media content provider (MCP) (must be unified for all media
+     * from one service!)
      */
     @NonNull
     private String nameOfMcp;
@@ -50,19 +50,35 @@ public class Channel {
     /**
      * number of all media on this channel (no matter if accepted or not)
      */
-    @Builder.Default private Long recordCount = 0l;
+    @Builder.Default
+    private Long recordCount = 0l;
 
     /**
      * number of accepted media from this channel
      */
-    @Builder.Default private Long acceptedRecordCount = 0l;
-    
+    @Builder.Default
+    private Long acceptedRecordCount = 0l;
+
     /**
-     * date and time of last record upload (no matter if waiting, accepted or rejected)
+     * date and time of last record upload (no matter if waiting, accepted or
+     * rejected)
      */
     private LocalDateTime lastRecordUpload;
 
     @NonNull
-    @Builder.Default private boolean trusted = false;
-    
+    @Builder.Default
+    private boolean trusted = false;
+
+    /**
+     * Check if channel is the same as this object (only using external ID and
+     * name of MCP). Channel from DB and from Plugin can be the same (even
+     * though Channel entity from Plugin doesn't have it's internal ID set).
+     *
+     * @param channel
+     * @return
+     */
+    public boolean isSameAs(Channel channel) {
+        return channel.getExternalId().equals(this.externalId) && channel.getNameOfMcp().equals(this.nameOfMcp);
+    }
+
 }
