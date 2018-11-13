@@ -1,5 +1,6 @@
 package com.jts.mediahunter.domain.entities;
 
+import com.jts.mediahunter.domain.RecordStage;
 import com.jts.mediahunter.domain.Thumbnail;
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -7,21 +8,21 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Entity for every Record of a Channel (Record can be video, audio, ...)
- * 
+ *
  * @author Tony
  */
 @Data
 @Builder
 @Document(collection = "waitingRecord")
 public class Record {
-    
-    
+
     /**
      * Internal ID
      */
@@ -39,12 +40,13 @@ public class Record {
      */
     @NonNull
     private String uploaderExternalId;
-    
+
     @NonNull
     private String nameOfRecord;
 
     /**
-     * name of the media content provider (MCP) (must be unified for all media from one service!)
+     * name of the media content provider (MCP) (must be unified for all media
+     * from one service!)
      */
     @NonNull
     private String nameOfMcp;
@@ -71,5 +73,20 @@ public class Record {
      * Description pulled from the record information, can be null
      */
     private String description;
+
+    @Transient
+    private RecordStage stage;
     
+    /**
+     * Check if record is the same as this object (only using external ID and
+     * name of MCP). Record from DB and from Plugin can be the same (even though
+     * Record entity from Plugin doesn't have it's internal ID set).
+     *
+     * @param record
+     * @return
+     */
+    public boolean isSameAs(Record record) {
+        return record.getExternalId().equals(this.externalId) && record.getNameOfMcp().equals(this.nameOfMcp);
+    }
+
 }
