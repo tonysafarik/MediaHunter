@@ -54,7 +54,7 @@ public class YouTubeTests {
 
     @Test
     public void getChannelByExternalIdCorrect() {
-        List<Channel> channel = yt.getChannelByExternalId("UCZdunuduJOFxxK0R41o4X-A");
+        Channel channel = yt.getChannelByExternalId("UCZdunuduJOFxxK0R41o4X-A");
 
         Channel channelToCompare = Channel.builder()
                 .externalId("UCZdunuduJOFxxK0R41o4X-A")
@@ -63,12 +63,12 @@ public class YouTubeTests {
                 .uri(UriComponentsBuilder.fromUriString("https://www.youtube.com/channel/UCZdunuduJOFxxK0R41o4X-A").build().toUri())
                 .build();
 
-        assertThat(channel.get(0)).isNotNull().isEqualToComparingFieldByField(channelToCompare);
+        assertThat(channel).isNotNull().isEqualToComparingFieldByField(channelToCompare);
     }
 
     @Test
     public void getRecordByExternalIdCorrect() {
-        List<Record> record = yt.getRecordByExternalId("wvJPLXmRrpk");
+        Record record = yt.getRecordByExternalId("wvJPLXmRrpk");
 
         Record recordToCompare = Record.builder()
                 .description("The hard core of HBOK crew, Cajt, is blading almost every day. He started skating about 20 years ago, and he's still killing it!")
@@ -81,7 +81,7 @@ public class YouTubeTests {
                 .uri(UriComponentsBuilder.fromUriString("https://www.youtube.com/watch?v=wvJPLXmRrpk").build().toUri())
                 .build();
 
-        assertThat(record.get(0)).isNotNull().isEqualToComparingFieldByField(recordToCompare);
+        assertThat(record).isNotNull().isEqualToComparingFieldByField(recordToCompare);
     }
 
     @Test

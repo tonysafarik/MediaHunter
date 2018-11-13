@@ -3,6 +3,7 @@ package com.jts.mediahunter.plugins.youtube;
 import com.jts.mediahunter.domain.entities.Channel;
 import com.jts.mediahunter.domain.entities.Record;
 import com.jts.mediahunter.plugins.MediaContentProviderPlugin;
+import com.jts.mediahunter.plugins.youtube.dto.YouTubeChannel;
 import com.jts.mediahunter.plugins.youtube.dto.YouTubeChannelList;
 import com.jts.mediahunter.plugins.youtube.dto.YouTubeRecord;
 import com.jts.mediahunter.plugins.youtube.dto.YouTubeRecordList;
@@ -26,7 +27,7 @@ public class YouTube implements MediaContentProviderPlugin {
 
     @Autowired
     private RestTemplate rest;
-
+    
     /**
      * Preferred way to add name of service - service name must be always the
      * same for one plugin
@@ -42,29 +43,23 @@ public class YouTube implements MediaContentProviderPlugin {
     private final String API_URI = "https://www.googleapis.com/youtube/v3";
 
     @Override
-    public List<Channel> getChannelByExternalId(String channelId) {
+    public Channel getChannelByExternalId(String channelId) {
         String[] parameters = {"part", "snippet", "id", channelId, "maxResults", "50", "key", this.API_KEY};
-
+        
         URI uri = buildURIForHTTPRequest("/channels", parameters);
 
         YouTubeChannelList channelList = rest.getForObject(uri, YouTubeChannelList.class);
 
-        List<Channel> channels = new ArrayList<>();
-
         if (channelList != null) {
-            channelList.getChannels().forEach((channel) -> {
-                channels.add(
-                        Channel.builder()
+            YouTubeChannel channel = channelList.getChannels().get(0);
+            return Channel.builder()
                                 .externalId(channel.getExternalId())
                                 .nameOfChannel(channel.getName())
                                 .nameOfMcp(SERVICE_NAME)
                                 .uri(channel.getUri())
-                                .build()
-                );
-            });
+                                .build();
         }
-
-        return channels;
+        return null;
     }
 
     /**
@@ -87,22 +82,18 @@ public class YouTube implements MediaContentProviderPlugin {
     }
 
     @Override
-    public List<Record> getRecordByExternalId(String recordId) {
+    public Record getRecordByExternalId(String recordId) {
         String[] parameters = {"part", "snippet", "id", recordId, "key", API_KEY};
 
         URI uri = buildURIForHTTPRequest("/videos", parameters);
 
         YouTubeRecordList videoList = rest.getForObject(uri, YouTubeRecordList.class);
 
-        List<Record> videos = new ArrayList<>();
-
         if (videoList != null) {
-            videoList.getRecords().forEach((record) -> {
-                videos.add(youTubeRecordToRecord(record));
-            });
+            return youTubeRecordToRecord(videoList.getRecords().get(0));
         }
 
-        return videos;
+        return null;
     }
 
     @Override

@@ -11,26 +11,22 @@ import java.util.List;
 public interface MediaContentProviderPlugin {
 
     /**
-     * Finds all channels with given external channel ID. Ideally, the list
-     * should contain only one Channel entity, but list is used in case two
-     * media content providers (MCPs) use same ID. Never set ID (internal) of
-     * the Channel entities, it will be set during DB insertion.
+     * Finds channel with given external channel ID. Never set ID (internal) of
+     * the Channel entity, it will be set during DB insertion.
      *
-     * @param channelId ID of Channel given by service
-     * @return List of Channel entities
+     * @param channelId ID of Channel given by MCP
+     * @return Channel entity
      */
-    public List<Channel> getChannelByExternalId(String channelId);
+    public Channel getChannelByExternalId(String channelId);
 
     /**
-     * Finds all records with given external record ID. Ideally, the list should
-     * contain only one record entity, but list is used in case two media
-     * content providers (MCPs) use same ID. Never set ID (internal) of the
-     * Record entities, it will be set during DB insertion.
+     * Finds record with given external record ID. Never set ID (internal) of the
+     * Record entity, it will be set during DB insertion.
      *
-     * @param recordId ID of Record given by service
-     * @return List of Record entities
+     * @param recordId ID of Record given by MCP
+     * @return Record entity
      */
-    public List<Record> getRecordByExternalId(String recordId);
+    public Record getRecordByExternalId(String recordId);
 
     /**
      *
