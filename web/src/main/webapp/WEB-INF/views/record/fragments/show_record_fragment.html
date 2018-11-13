@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>channel fragments</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../../../resources/css/main_layout.css" />
+</head>
+
+<body>
+
+    <div th:fragment="showRecord_v1">
+        <h2 th:text="${record.name}">Name of record</h2>
+        <h4 th:text="${record.mcpName}">MCP name</h4>
+        <span>Internal ID: </span><span th:text="${record.internalId}">value</span><br>
+        <span>External ID: </span><span th:text="${record.externalId}">value</span><br>
+        <span>Uploader External ID: </span><span th:text="${record.uploaderExternalId}">value</span><br>
+        <span>Link to Record: </span><a href="#" th:href="${record.uri}" th:text="${record.uri}">value</a><br>
+
+        <span>Links to thumbnail: </span><span><a th:unless="${record.thumbnails.lowResolution == null}" href="#"
+                th:href="${record.thumbnails.lowResolution}">low resolution</a> <a th:unless="${record.thumbnails.highResolution == null}"
+                href="#" th:href="${record.thumbnails.highResolution}">high resolution</a></span><br>
+
+        <span>Description: </span><span th:text="${record.description}">value</span><br>
+        <span>Stage: </span><span th:text="${record.stage}">value</span>
+    </div>
+
+</body>
+
+</html>

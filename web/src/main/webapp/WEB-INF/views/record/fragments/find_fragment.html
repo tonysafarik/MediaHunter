@@ -13,7 +13,7 @@
     <div th:fragment="recordFindForm_v1">
         <form class="find_form" name="addRecord" action="#" th:action="@{/record/list}" th:object="${string}"
             th:method="get">
-            <input type="text" name="recordId" placeholder="Record ID">
+            <input type="text" name="externalId" placeholder="Record ID">
             <input type="submit" value="Find">
         </form>
     </div>
