@@ -24,17 +24,17 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     public List<Channel> getChannelsByExternalId(String externalId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return channelDAO.findByExternalId(externalId);
     }
 
     @Override
     public String putChannelToDB(Channel channel) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return channelDAO.insert(channel).getId();
     }
 
     @Override
     public Channel getChannelById(String internalId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return channelDAO.findById(internalId).orElse(null);
     }
 
     @Override

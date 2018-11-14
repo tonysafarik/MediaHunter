@@ -20,12 +20,21 @@ public class PluginServiceImpl implements PluginService {
     
     @Override
     public List<Channel> getChannelsByExternalId(String externalId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Channel> channels = new ArrayList<>();
+        for (MediaContentProviderPlugin plugin : plugins) {
+            channels.add(plugin.getChannelByExternalId(externalId));
+        }
+        return channels;
     }
 
     @Override
     public Channel getChannelByExternalIdFromMCP(String externalId, String nameOfMCP) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (MediaContentProviderPlugin plugin : plugins) {
+            if (plugin.getMcpName().equals(nameOfMCP)) {
+                return plugin.getChannelByExternalId(externalId);
+            }
+        }
+        return null;
     }
 
     @Override
