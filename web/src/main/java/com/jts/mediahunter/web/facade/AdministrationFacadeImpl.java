@@ -30,7 +30,7 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
     private FindChannelDTO channelToFindChannelDTO(Channel channel) {
         return FindChannelDTO.builder()
                 .mcpName(channel.getNameOfMcp())
-                .channelName(channel.getNameOfChannel())
+                .name(channel.getNameOfChannel())
                 .externalId(channel.getExternalId())
                 .internalId(channel.getId())
                 .trusted(channel.isTrusted())
@@ -73,9 +73,19 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
 
     @Override
     public ChannelInfoDTO getChannelInfo(String internalId) {
-        db.getChannelById(internalId);
-        //TODO decide what info do I need
-        return new ChannelInfoDTO();
+        Channel channel = db.getChannelById(internalId);
+        ChannelInfoDTO info = ChannelInfoDTO.builder()
+                .acceptedRecordCount(channel.getAcceptedRecordCount())
+                .externalId(channel.getExternalId())
+                .internalId(channel.getId())
+                .lastRecordUploadTime(channel.getLastRecordUpload())
+                .mcpName(channel.getNameOfMcp())
+                .name(channel.getNameOfChannel())
+                .recordCount(channel.getRecordCount())
+                .trusted(channel.isTrusted())
+                .uri(channel.getUri())
+                .build();
+        return info;
     }
 
     @Override

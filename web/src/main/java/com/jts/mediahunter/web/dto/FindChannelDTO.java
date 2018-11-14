@@ -16,7 +16,7 @@ public class FindChannelDTO {
     
     private String externalId;
     
-    private String channelName;
+    private String name;
     
     private URI uri;
     

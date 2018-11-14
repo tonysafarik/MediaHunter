@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>channel fragments</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../../../resources/css/main_layout.css" />
+</head>
+
+<body>
+
+    <div th:fragment="channelList">
+        <div th:each="channel : ${channels}" class="list">
+
+            <div th:if="${channel.internalId == null}" th:fragment="MCP_channel" class="MCP_list_item">
+                <a href="#" th:href="${channel.uri}">
+                    <div class="info">
+                        <h2 th:text="${channel.name}">Channel name</h2>
+                        <h5 th:text="${channel.mcpName}">MCP name</h5>
+                    </div>
+                </a>
+                <form action="#" th:action="@{/channel/put}" th:method="post" class="acceptRejectForm">
+                    <label class="trusted">
+                        <input type="checkbox" th:name="trusted">
+                        <span>Trusted</span>
+                    </label>
+                    <input type="hidden" th:name="externalId" th:value="${channel.externalId}">
+                    <input type="hidden" th:name="mcpName" th:value="${channel.mcpName}">
+                    <input type="submit" value="Accept" class="accept">
+                </form>
+            </div>
+
+
+            <div th:unless="${channel.internalId == null}" th:fragment="DB_channel" class="DB_list_item">
+                <a href="#" th:href="@{/channel/show(id=${channel.internalId})}">
+                    <div class="info">
+                        <h2 th:text="${channel.name}">Channel name</h2>
+                        <h5 th:text="${channel.mcpName}">MCP name</h5>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
