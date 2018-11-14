@@ -146,16 +146,7 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
 
     private void acceptRecord(String internalId) {
         Record record = db.getRecordById(internalId);
-        switch (record.getStage()) {
-            case ACCEPTED:
-                break;
-            case WAITING:
-            case REJECTED:
-                db.acceptRecord(record);
-                break;
-            default:
-                break;
-        }
+        db.acceptRecord(record);
     }
 
     @Override

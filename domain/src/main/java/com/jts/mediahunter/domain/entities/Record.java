@@ -20,7 +20,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Data
 @Builder
-@Document(collection = "waitingRecord")
+@Document
 public class Record {
 
     /**
@@ -74,8 +74,9 @@ public class Record {
      */
     private String description;
 
-    @Transient
-    private RecordStage stage;
+    @NonNull
+    @Builder.Default
+    private RecordStage stage = RecordStage.UNKNOWN;
     
     /**
      * Check if record is the same as this object (only using external ID and

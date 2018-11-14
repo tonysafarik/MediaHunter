@@ -49,47 +49,30 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     public List<Record> getRecordsByExternalId(String externalId) {
-        List<Record> waitingRecords = recordDAO.findByExternalId(externalId);
-        for (Record record : waitingRecords) {
-            record.setStage(RecordStage.WAITING);
-        }
-        //TODO find records from all stages!
-        return waitingRecords;
+        return recordDAO.findByExternalId(externalId);
     }
 
     @Override
     public String putRecordToDB(Record record) {
+        record.setStage(RecordStage.WAITING);
         record = recordDAO.insert(record);
         return record.getId();
     }
 
     @Override
     public Record getRecordById(String internalId) {
-        Record record = recordDAO.findById(internalId).orElse(null);
-        if (record != null) {
-            record.setStage(RecordStage.WAITING);
-        }
-        //TODO check other stages!
-        return record;
+        return recordDAO.findById(internalId).orElse(null);     
     }
 
     @Override
     public void updateRecord(Record record) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        recordDAO.save(record);
     }
 
     @Override
     public void acceptRecord(Record record) {
-        switch (record.getStage()) {
-            case WAITING:
-                recordDAO.acceptWaitingRecord(record);
-                break;
-            case REJECTED:
-                recordDAO.acceptRejectedRecord(record);
-                break;
-            default:
-                break;
-        }
+        record.setStage(RecordStage.ACCEPTED);
+        recordDAO.save(record);
     }
 
 }
