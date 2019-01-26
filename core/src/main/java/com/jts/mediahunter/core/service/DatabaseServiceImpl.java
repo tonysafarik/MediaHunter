@@ -39,12 +39,23 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     public void updateChannel(Channel channel) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        channelDAO.save(channel);
     }
 
     @Override
     public void deleteChannel(String internalID, boolean deleteAllChannelRecords) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Channel channel = channelDAO.findById(internalID).orElse(null);
+        if (channel != null) {
+            //TODO check if channel and all records had been deleted
+            // if not, return to state before this method!
+            channelDAO.delete(channel);
+            if (deleteAllChannelRecords) {
+                List<Record> records = recordDAO.findByUploader(channel.getExternalId(), channel.getNameOfMcp());
+                for (Record record : records) {
+                    recordDAO.delete(record);
+                }
+            }
+        }
     }
 
     @Override
@@ -61,7 +72,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     public Record getRecordById(String internalId) {
-        return recordDAO.findById(internalId).orElse(null);     
+        return recordDAO.findById(internalId).orElse(null);
     }
 
     @Override
@@ -71,7 +82,26 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     public void acceptRecord(Record record) {
+        //TODO record -> internalID, service can do it all!
+        getChannelsByExternalId(record.getUploaderExternalId());
         record.setStage(RecordStage.ACCEPTED);
+        recordDAO.save(record);
+    }
+
+    @Override
+    public List<Record> getWaitingRecords() {
+        return recordDAO.findWaitingRecords();
+    }
+
+    @Override
+    public List<Channel> getAllChannels() {
+        return channelDAO.findAll();
+    }
+
+    @Override
+    public void rejectRecord(Record record) {
+        //TODO record -> internalID, service can do it all!
+        record.setStage(RecordStage.REJECTED);
         recordDAO.save(record);
     }
 

@@ -2,7 +2,8 @@ package com.jts.mediahunter.core.service;
 
 import com.jts.mediahunter.domain.entities.Channel;
 import com.jts.mediahunter.domain.entities.Record;
-import com.jts.mediahunter.plugins.MediaContentProviderPlugin;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
