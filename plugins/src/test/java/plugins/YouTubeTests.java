@@ -6,8 +6,10 @@ import com.jts.mediahunter.domain.entities.Record;
 import com.jts.mediahunter.plugins.PluginsConfiguration;
 import com.jts.mediahunter.plugins.youtube.YouTube;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -88,13 +90,28 @@ public class YouTubeTests {
     public void getAllChannelRecordsCorrect() {
         List<Record> records = yt.getAllChannelRecords("UCZdunuduJOFxxK0R41o4X-A");
 
-        assertThat(records).hasSize(40).extracting("nameOfRecord").contains("JEDLA - 2011 - HBOK crew",
+        assertThat(records).hasSize(41).extracting("nameOfRecord").contains("JEDLA - 2011 - HBOK crew",
                 "ONE MINUTE EDIT - Martin \"Santos\" Charvát",
                 "Tom - One Trick",
                 "Filip Samsonek - HBOK crew - Still Here, Still Blading",
                 "Jiří Rygál - HBOK crew - Still Here, Still Blading");
         assertThat(records).extracting("nameOfMcp").containsOnly("YouTube");
         assertThat(records).extracting("uploaderExternalId").containsOnly("UCZdunuduJOFxxK0R41o4X-A");
+    }
+
+    @Test
+    public void getAllChannelRecordsOver50Correct() {
+        // ID of James Cordens youtube channel. It has over 2900 videos (14.11.2018) 
+        List<Record> records = yt.getAllChannelRecords("UCJ0uqCI0Vqr2Rrt1HseGirg");
+        assertThat(records).size().isGreaterThan(2900);
+    }
+
+    @Test
+    public void getNewRecordsCorrect() {
+        LocalDateTime time = LocalDateTime.of(2014, Month.JULY, 28, 15, 30);
+        List<Record> records = yt.getNewRecords("UCZdunuduJOFxxK0R41o4X-A", time);
+        List<Record> allChannelRecords = yt.getAllChannelRecords("UCZdunuduJOFxxK0R41o4X-A");
+        assertThat(records).containsAll(allChannelRecords.stream().filter( record -> time.isBefore(((Record) record).getUploadTime()) ).collect(Collectors.toList()));
     }
 
 }

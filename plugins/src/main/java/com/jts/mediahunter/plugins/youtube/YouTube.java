@@ -8,6 +8,7 @@ import com.jts.mediahunter.plugins.youtube.dto.YouTubeChannelList;
 import com.jts.mediahunter.plugins.youtube.dto.YouTubeRecord;
 import com.jts.mediahunter.plugins.youtube.dto.YouTubeRecordList;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +28,7 @@ public class YouTube implements MediaContentProviderPlugin {
 
     @Autowired
     private RestTemplate rest;
-    
+
     /**
      * Preferred way to add name of service - service name must be always the
      * same for one plugin
@@ -45,7 +46,7 @@ public class YouTube implements MediaContentProviderPlugin {
     @Override
     public Channel getChannelByExternalId(String channelId) {
         String[] parameters = {"part", "snippet", "id", channelId, "maxResults", "50", "key", this.API_KEY};
-        
+
         URI uri = buildURIForHTTPRequest("/channels", parameters);
 
         YouTubeChannelList channelList = rest.getForObject(uri, YouTubeChannelList.class);
@@ -53,11 +54,11 @@ public class YouTube implements MediaContentProviderPlugin {
         if (channelList != null) {
             YouTubeChannel channel = channelList.getChannels().get(0);
             return Channel.builder()
-                                .externalId(channel.getExternalId())
-                                .nameOfChannel(channel.getName())
-                                .nameOfMcp(SERVICE_NAME)
-                                .uri(channel.getUri())
-                                .build();
+                    .externalId(channel.getExternalId())
+                    .nameOfChannel(channel.getName())
+                    .nameOfMcp(SERVICE_NAME)
+                    .uri(channel.getUri())
+                    .build();
         }
         return null;
     }
@@ -129,17 +130,18 @@ public class YouTube implements MediaContentProviderPlugin {
         YouTubeRecordList videoList = rest.getForObject(uri, YouTubeRecordList.class);
 
         List<Record> videos = new ArrayList<>();
-        
+
         if (videoList == null) {
             return videos;
         }
-        
+
         for (YouTubeRecord record : videoList.getRecords()) {
             videos.add(youTubeRecordToRecord(record));
         }
-        
-        while (videoList.getNextPageTogen() != null) {
+        if (videoList.getNextPageTogen() != null) {
             parameters = Arrays.copyOf(parameters, parameters.length + 2);
+        }
+        while (videoList.getNextPageTogen() != null) {
             parameters[8] = "pageToken";
             parameters[9] = videoList.getNextPageTogen();
 
@@ -171,6 +173,54 @@ public class YouTube implements MediaContentProviderPlugin {
             return null;
         }
         return (String) json.get("uploads");
+    }
+
+    @Override
+    public List<Record> getNewRecords(String channelId, LocalDateTime oldestRecord) {
+        String playListId = getChannelsUploadListId(channelId);
+
+        if (playListId == null) {
+            return new ArrayList<>();
+        }
+
+        String[] parameters = {"part", "snippet", "maxResults", "50", "playlistId", playListId, "key", API_KEY};
+
+        URI uri = buildURIForHTTPRequest("/playlistItems", parameters);
+
+        YouTubeRecordList videoList = rest.getForObject(uri, YouTubeRecordList.class);
+
+        List<Record> videos = new ArrayList<>();
+
+        if (videoList == null) {
+            return videos;
+        }
+
+        for (YouTubeRecord record : videoList.getRecords()) {
+            if (record.getUploadTime().isBefore(oldestRecord)) {
+                return videos;
+            }
+            videos.add(youTubeRecordToRecord(record));
+        }
+        if (videoList.getNextPageTogen() != null) {
+            parameters = Arrays.copyOf(parameters, parameters.length + 2);
+        }
+        while (videoList.getNextPageTogen() != null) {
+            parameters[8] = "pageToken";
+            parameters[9] = videoList.getNextPageTogen();
+
+            uri = buildURIForHTTPRequest("/playlistItems", parameters);
+
+            videoList = rest.getForObject(uri, YouTubeRecordList.class);
+            if (videoList != null) {
+                for (YouTubeRecord record : videoList.getRecords()) {
+                    if (record.getUploadTime().isBefore(oldestRecord)) {
+                        return videos;
+                    }
+                    videos.add(youTubeRecordToRecord(record));
+                }
+            }
+        }
+        return videos;
     }
 
 }

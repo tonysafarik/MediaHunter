@@ -2,6 +2,7 @@ package com.jts.mediahunter.plugins;
 
 import com.jts.mediahunter.domain.entities.Channel;
 import com.jts.mediahunter.domain.entities.Record;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -43,4 +44,12 @@ public interface MediaContentProviderPlugin {
      */
     public List<Record> getAllChannelRecords(String channelId);
 
+    /**
+     * Finds all records from "oldestRecord" to the newest uploaded by channel with given external ID
+     * @param channelId
+     * @param oldestRecord
+     * @return 
+     */
+    public List<Record> getNewRecords(String channelId, LocalDateTime oldestRecord);
+    
 }
