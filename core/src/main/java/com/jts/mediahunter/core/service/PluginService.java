@@ -14,10 +14,14 @@ public interface PluginService {
 
     public List<Channel> getChannelsByExternalId(String externalId);
     
-    public Channel getChannelByExternalIdFromMCP(String externalId, String nameOfMCP);
+    public Channel getChannelByExternalId(String externalId, String nameOfMCP);
     
     public List<Record> getRecordsByExternalId(String externalId);
     
-    public Record getRecordByExternalIdFromMCP(String externalId, String nameOfMCP);
+    public Record getRecordByExternalId(String externalId, String nameOfMCP);
     
+    public List<Record> getRecordsByUploaderExternalId(String uploaderExternalId, String nameOfMCP);
+
+    public List<Record> getRecordsByUploaderExternalId(String uploaderExternalId, String nameOfMCP, LocalDateTime from);
+
 }

@@ -80,7 +80,7 @@ public class ServiceMocks {
             return channelsToReturn;
         });
         
-        when(plugins.getChannelByExternalIdFromMCP(any(String.class), any(String.class))).then((invocation) -> {
+        when(plugins.getChannelByExternalId(any(String.class), any(String.class))).then((invocation) -> {
             String externalId = invocation.getArgument(0);
             String nameOfMCP = invocation.getArgument(1);
             for (Channel channel : channels) {

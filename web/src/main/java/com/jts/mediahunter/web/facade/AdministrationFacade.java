@@ -64,5 +64,12 @@ public interface AdministrationFacade {
     
     public void updateRecord(String internalId);
     
+    public List<FindRecordDTO> getWaitingRecords();
+    
+    public void acceptRecord(String internalId);
+    
+    public void rejectRecord(String internalId);
+    
+    public void addAllNewMedia();
     
 }

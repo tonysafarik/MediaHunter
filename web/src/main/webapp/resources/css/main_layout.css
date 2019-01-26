@@ -196,3 +196,41 @@ body {
 .MCP_list_item form input[type="submit"]:hover {
   background-color: #6A6;
 }
+
+.entity_info {
+  width: 60%;
+  margin: 0 auto;
+  font-family: calibri;
+  background-color: #F7F7F7;
+}
+
+.entity_info h2, .entity_info h4 {
+  text-align: center;
+  margin: 0;
+}
+
+.entity_info h2 {
+  padding-top: 15px;
+}
+
+.entity_info h4 {
+  font-weight: lighter;
+  padding-bottom: 15px;
+}
+
+.entity_info .table_tag {
+  font-weight: bolder;
+  display: block;
+  text-align: center;
+  background-color: #FAFAFA;
+  line-height: 2.5em;
+}
+
+.entity_info .table_tag:nth-child(even) {
+  background-color: #F0F0F0;
+}
+
+.entity_info .table_tag:before {
+  content: attr(title) ": ";
+  cursor: text;
+}

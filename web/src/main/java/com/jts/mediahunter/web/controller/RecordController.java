@@ -6,6 +6,7 @@ import com.jts.mediahunter.web.facade.AdministrationFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,4 +52,33 @@ public class RecordController {
         return new ModelAndView("/record/show", "record", info);
     }
 
+    @GetMapping("/queue")
+    public ModelAndView getWaitingRecords(){
+        ModelAndView mnv = new ModelAndView("/record/queue");
+        List<FindRecordDTO> records = admin.getWaitingRecords();
+        mnv.addObject("records", records);
+        return mnv;
+    }
+    
+    @GetMapping("/update")
+    public String updateRecord(@RequestParam(name="internalId") String internalId, RedirectAttributes redAttr){
+        admin.updateRecord(internalId);
+        redAttr.addAttribute("id", internalId);
+        return "redirect:/record/show";
+    }
+    
+    @GetMapping("/accept")
+    public String acceptRecord(@RequestParam(name="internalId") String internalId, RedirectAttributes redAttr){
+        admin.acceptRecord(internalId);
+        redAttr.addAttribute("id", internalId);
+        return "redirect:/record/show";
+    }
+    
+    @GetMapping("/reject")
+    public String rejectRecord(@RequestParam(name="internalId") String internalId, RedirectAttributes redAttr){
+        admin.rejectRecord(internalId);
+        redAttr.addAttribute("id", internalId);
+        return "redirect:/record/show";
+    }
+    
 }

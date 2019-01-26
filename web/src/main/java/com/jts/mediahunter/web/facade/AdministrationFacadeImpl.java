@@ -2,20 +2,20 @@ package com.jts.mediahunter.web.facade;
 
 import com.jts.mediahunter.core.service.DatabaseService;
 import com.jts.mediahunter.core.service.PluginService;
-import com.jts.mediahunter.domain.RecordStage;
 import com.jts.mediahunter.domain.entities.Channel;
 import com.jts.mediahunter.domain.entities.Record;
 import com.jts.mediahunter.web.dto.ChannelInfoDTO;
 import com.jts.mediahunter.web.dto.FindChannelDTO;
 import com.jts.mediahunter.web.dto.FindRecordDTO;
 import com.jts.mediahunter.web.dto.RecordInfoDTO;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- *
  * @author Tony
  */
 @Component
@@ -63,10 +63,15 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
 
     @Override
     public String putChannelToDB(String externalId, String mcpName, boolean trusted) {
-        Channel channel = plugins.getChannelByExternalIdFromMCP(externalId, mcpName);
+        Channel channel = plugins.getChannelByExternalId(externalId, mcpName);
         channel.setTrusted(trusted);
-        if (trusted) {
-            //TODO add all its videos to accepted stage
+        List<Record> records = plugins.getRecordsByUploaderExternalId(externalId, mcpName);
+        channel.setRecordCount(Long.valueOf(records.size()));
+        for (Record record : records) {
+            db.putRecordToDB(record);
+            if (trusted) {
+                db.acceptRecord(record);
+            }
         }
         return db.putChannelToDB(channel);
     }
@@ -91,7 +96,7 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
     @Override
     public void updateChannel(String internalId) {
         Channel channel = db.getChannelById(internalId);
-        Channel updatedChannel = plugins.getChannelByExternalIdFromMCP(channel.getExternalId(), channel.getNameOfMcp());
+        Channel updatedChannel = plugins.getChannelByExternalId(channel.getExternalId(), channel.getNameOfMcp());
         channel.setNameOfChannel(updatedChannel.getNameOfChannel());
         // update more if needed
         db.updateChannel(channel);
@@ -138,13 +143,14 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
 
     @Override
     public String putRecordToDB(String externalId, String mcpName) {
-        Record record = plugins.getRecordByExternalIdFromMCP(externalId, mcpName);
+        Record record = plugins.getRecordByExternalId(externalId, mcpName);
         String id = db.putRecordToDB(record);
         acceptRecord(id);
         return id;
     }
 
-    private void acceptRecord(String internalId) {
+    @Override
+    public void acceptRecord(String internalId) {
         Record record = db.getRecordById(internalId);
         db.acceptRecord(record);
     }
@@ -169,12 +175,43 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
     @Override
     public void updateRecord(String internalId) {
         Record record = db.getRecordById(internalId);
-        Record updatedRecord = plugins.getRecordByExternalIdFromMCP(record.getExternalId(), record.getNameOfMcp());
+        Record updatedRecord = plugins.getRecordByExternalId(record.getExternalId(), record.getNameOfMcp());
         record.setDescription(updatedRecord.getDescription());
         record.setNameOfRecord(updatedRecord.getNameOfRecord());
         record.setThumbnail(updatedRecord.getThumbnail());
         record.setUri(updatedRecord.getUri());
         db.updateRecord(record);
+    }
+
+    @Override
+    public List<FindRecordDTO> getWaitingRecords() {
+        List<Record> records = db.getWaitingRecords();
+        List<FindRecordDTO> found = new ArrayList<>();
+        for (Record record : records) {
+            found.add(recordToFindRecordDTO(record));
+        }
+        return found;
+    }
+
+    @Override
+    public void rejectRecord(String internalId) {
+        Record record = db.getRecordById(internalId);
+        db.rejectRecord(record);
+    }
+
+    @Override
+    public void addAllNewMedia() {
+        List<Channel> channels = db.getAllChannels();
+        for (Channel channel : channels) {
+            List<Record> records = plugins.getRecordsByUploaderExternalId(channel.getExternalId(), channel.getNameOfMcp());
+            for (Record record : records) {
+                db.putRecordToDB(record);
+                if (channel.isTrusted()) {
+                    db.acceptRecord(record);
+                }
+            }
+
+        }
     }
 
 }

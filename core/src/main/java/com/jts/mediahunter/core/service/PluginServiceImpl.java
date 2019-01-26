@@ -30,7 +30,7 @@ public class PluginServiceImpl implements PluginService {
     }
 
     @Override
-    public Channel getChannelByExternalIdFromMCP(String externalId, String nameOfMCP) {
+    public Channel getChannelByExternalId(String externalId, String nameOfMCP) {
         for (MediaContentProviderPlugin plugin : plugins) {
             if (plugin.getMcpName().equals(nameOfMCP)) {
                 return plugin.getChannelByExternalId(externalId);
@@ -49,7 +49,7 @@ public class PluginServiceImpl implements PluginService {
     }
 
     @Override
-    public Record getRecordByExternalIdFromMCP(String externalId, String nameOfMCP) {
+    public Record getRecordByExternalId(String externalId, String nameOfMCP) {
         for (MediaContentProviderPlugin plugin : plugins) {
             if (plugin.getMcpName().equals(nameOfMCP)) {
                 return plugin.getRecordByExternalId(externalId);
@@ -57,5 +57,25 @@ public class PluginServiceImpl implements PluginService {
         }
         return null;
     }
-    
+
+    @Override
+    public List<Record> getRecordsByUploaderExternalId(String externalId, String nameOfMCP) {
+        for (MediaContentProviderPlugin plugin : plugins) {
+            if (plugin.getMcpName().equals(nameOfMCP)) {
+                return plugin.getAllChannelRecords(externalId);
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Record> getRecordsByUploaderExternalId(String uploaderExternalId, String nameOfMCP, LocalDateTime from) {
+        for (MediaContentProviderPlugin plugin : plugins) {
+            if (plugin.getMcpName().equals(nameOfMCP)) {
+                return plugin.getNewRecords(uploaderExternalId, from);
+            }
+        }
+        return new ArrayList<>();
+    }
+
 }
