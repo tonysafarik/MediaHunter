@@ -32,3 +32,6 @@ README.html
 /core/nbproject/
 /plugins/nbproject/
 /web/nbproject/
+
+### VS Code ###
+.vscode
