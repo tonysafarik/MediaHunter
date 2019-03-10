@@ -32,6 +32,7 @@ README.html
 /core/nbproject/
 /plugins/nbproject/
 /web/nbproject/
+nbactions.xml
 
 ### VS Code ###
 .vscode
