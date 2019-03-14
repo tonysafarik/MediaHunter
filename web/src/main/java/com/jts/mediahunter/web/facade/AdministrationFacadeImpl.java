@@ -66,12 +66,12 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
         Channel channel = plugins.getChannelByExternalId(externalId, mcpName);
         channel.setTrusted(trusted);
         List<Record> records = plugins.getRecordsByUploaderExternalId(externalId, mcpName);
-        channel.setRecordCount(Long.valueOf(records.size()));
         for (Record record : records) {
             db.putRecordToDB(record);
             if (trusted) {
                 db.acceptRecord(record);
             }
+            channel.registerNewRecord(record);
         }
         return db.putChannelToDB(channel);
     }

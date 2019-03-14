@@ -2,6 +2,8 @@ package com.jts.mediahunter.domain.entities;
 
 import java.net.URI;
 import java.time.LocalDateTime;
+
+import com.jts.mediahunter.domain.RecordStage;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
@@ -80,5 +82,21 @@ public class Channel {
     public boolean isSameAs(Channel channel) {
         return channel.getExternalId().equals(this.externalId) && channel.getNameOfMcp().equals(this.nameOfMcp);
     }
+
+    public void registerNewRecord(Record record) {
+        this.recordCount++;
+        if (record.getStage().equals(RecordStage.ACCEPTED)) {
+            registerNewAcceptedRecord(record);
+        }
+        if (this.lastRecordUpload == null || record.getUploadTime().isAfter(this.lastRecordUpload)) {
+            this.lastRecordUpload = record.getUploadTime();
+        }
+    }
+
+    public void registerNewAcceptedRecord(Record record) {
+        this.acceptedRecordCount++;
+    }
+
+    //TODO: accepted record -> rejected needs to decrement this.acceptedRecordCount
 
 }
