@@ -10,11 +10,11 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.*;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,10 +30,18 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = {PluginsConfiguration.class})
+@Slf4j
 public class YouTubeTests {
 
     @Autowired
     private YouTube yt;
+
+    @Rule
+    public TestRule watcher = new TestWatcher() {
+        protected void starting(Description description) {
+            log.info("Starting test: " + description.getMethodName());
+        }
+    };
 
     public YouTubeTests() {
     }
@@ -60,8 +68,8 @@ public class YouTubeTests {
 
         Channel channelToCompare = Channel.builder()
                 .externalId("UCZdunuduJOFxxK0R41o4X-A")
-                .nameOfChannel("Tony HBOK crew")
-                .nameOfMcp(yt.getMcpName())
+                .name("Tony HBOK crew")
+                .mcpName(yt.getMcpName())
                 .uri(UriComponentsBuilder.fromUriString("https://www.youtube.com/channel/UCZdunuduJOFxxK0R41o4X-A").build().toUri())
                 .build();
 
@@ -75,8 +83,8 @@ public class YouTubeTests {
         Record recordToCompare = Record.builder()
                 .description("The hard core of HBOK crew, Cajt, is blading almost every day. He started skating about 20 years ago, and he's still killing it!")
                 .externalId("wvJPLXmRrpk")
-                .nameOfMcp(yt.getMcpName())
-                .nameOfRecord("Cajt - HBOK crew - Still Here, Still Blading")
+                .mcpName(yt.getMcpName())
+                .name("Cajt - HBOK crew - Still Here, Still Blading")
                 .thumbnail(new Thumbnail("https://i.ytimg.com/vi/wvJPLXmRrpk/mqdefault.jpg", "https://i.ytimg.com/vi/wvJPLXmRrpk/sddefault.jpg"))
                 .uploadTime(LocalDateTime.parse("2016-02-14T18:55:23.000Z", DateTimeFormatter.ISO_ZONED_DATE_TIME))
                 .uploaderExternalId("UCZdunuduJOFxxK0R41o4X-A")
@@ -90,12 +98,12 @@ public class YouTubeTests {
     public void getAllChannelRecordsCorrect() {
         List<Record> records = yt.getAllChannelRecords("UCZdunuduJOFxxK0R41o4X-A");
 
-        assertThat(records).hasSize(41).extracting("nameOfRecord").contains("JEDLA - 2011 - HBOK crew",
+        assertThat(records).hasSize(41).extracting("name").contains("JEDLA - 2011 - HBOK crew",
                 "ONE MINUTE EDIT - Martin \"Santos\" Charvát",
                 "Tom - One Trick",
                 "Filip Samsonek - HBOK crew - Still Here, Still Blading",
                 "Jiří Rygál - HBOK crew - Still Here, Still Blading");
-        assertThat(records).extracting("nameOfMcp").containsOnly("YouTube");
+        assertThat(records).extracting("mcpName").containsOnly("YouTube");
         assertThat(records).extracting("uploaderExternalId").containsOnly("UCZdunuduJOFxxK0R41o4X-A");
     }
 

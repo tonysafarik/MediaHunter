@@ -13,28 +13,28 @@
     <div th:fragment="showRecord_v1" class="entity_info">
         <h2 th:text="${record.name}">Name of record</h2>
         <h4 th:text="${record.mcpName}">MCP name</h4>
-        <span title="Internal ID" class="table_tag" th:text="${record.internalId}">value</span>
+        <span title="Internal ID" class="table_tag" th:text="${record.id}">value</span>
         <span title="External ID" class="table_tag" th:text="${record.externalId}">value</span>
         <span title="Uploader External ID" class="table_tag" th:text="${record.uploaderExternalId}">value</span>
         <span title="Link to Record" class="table_tag"><a href="#" th:href="${record.uri}" th:text="${record.uri}">value</a></span>
 
-        <span title="Links to thumbnail" class="table_tag"><a th:unless="${record.thumbnails.lowResolution == null}" href="#"
-                th:href="${record.thumbnails.lowResolution}">low resolution</a> <a th:unless="${record.thumbnails.highResolution == null}"
-                href="#" th:href="${record.thumbnails.highResolution}">high resolution</a></span>
+        <span title="Links to thumbnail" class="table_tag"><a th:unless="${record.thumbnail.lowResolution == null}" href="#"
+                th:href="${record.thumbnail.lowResolution}">low resolution</a> <a th:unless="${record.thumbnail.highResolution == null}"
+                href="#" th:href="${record.thumbnail.highResolution}">high resolution</a></span>
 
         <span title="Description" class="table_tag" th:text="${record.description}">value</span>
         <span title="Stage" class="table_tag" th:text="${record.stage}">value</span>
         <div>
             <form th:unless="${record.stage.name() == 'ACCEPTED'}" th:action="@{/record/accept}" th:method="get">
-                <input type="hidden" th:name="internalId" th:value="${record.internalId}">
+                <input type="hidden" th:name="id" th:value="${record.id}">
                 <input type="submit" value="Accept record">
             </form>
             <form th:unless="${record.stage.name() == 'REJECTED'}" th:action="@{/record/reject}" th:method="get">
-                <input type="hidden" th:name="internalId" th:value="${record.internalId}">
+                <input type="hidden" th:name="id" th:value="${record.id}">
                 <input type="submit" value="Reject record">
             </form>
             <form th:action="@{/record/update}" th:method="get">
-                <input type="hidden" th:name="internalId" th:value="${record.internalId}">
+                <input type="hidden" th:name="id" th:value="${record.id}">
                 <input type="submit" value="Update">
             </form>
         </div>

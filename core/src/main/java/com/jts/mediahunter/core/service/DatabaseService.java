@@ -36,4 +36,6 @@ public interface DatabaseService {
 
     public List<Channel> getAllChannels();
 
+    public List<Record> getRecordPage(int page);
+
 }

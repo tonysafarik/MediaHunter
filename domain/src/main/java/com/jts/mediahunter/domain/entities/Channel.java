@@ -34,14 +34,14 @@ public class Channel {
     private String externalId;
 
     @NonNull
-    private String nameOfChannel;
+    private String name;
 
     /**
      * name of the media content provider (MCP) (must be unified for all media
      * from one service!)
      */
     @NonNull
-    private String nameOfMcp;
+    private String mcpName;
 
     /**
      * URI of the channel
@@ -80,7 +80,7 @@ public class Channel {
      * @return
      */
     public boolean isSameAs(Channel channel) {
-        return channel.getExternalId().equals(this.externalId) && channel.getNameOfMcp().equals(this.nameOfMcp);
+        return channel.getExternalId().equals(this.externalId) && channel.getMcpName().equals(this.mcpName);
     }
 
     public void registerNewRecord(Record record) {

@@ -4,14 +4,11 @@ import com.jts.mediahunter.core.service.DatabaseService;
 import com.jts.mediahunter.core.service.PluginService;
 import com.jts.mediahunter.domain.entities.Channel;
 import com.jts.mediahunter.domain.entities.Record;
-import com.jts.mediahunter.web.dto.ChannelInfoDTO;
-import com.jts.mediahunter.web.dto.FindChannelDTO;
-import com.jts.mediahunter.web.dto.FindRecordDTO;
-import com.jts.mediahunter.web.dto.RecordInfoDTO;
-
+import com.jts.mediahunter.domain.dto.*;
 import java.util.ArrayList;
 import java.util.List;
-
+import com.jts.mediahunter.domain.mappers.ChannelMapper;
+import com.jts.mediahunter.domain.mappers.RecordMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,26 +19,26 @@ import org.springframework.stereotype.Component;
 public class AdministrationFacadeImpl implements AdministrationFacade {
 
     @Autowired
+    private ChannelMapper channelMapper;
+
+    @Autowired
+    private RecordMapper recordMapper;
+
+    @Autowired
     private DatabaseService db;
 
     @Autowired
     private PluginService plugins;
 
     private FindChannelDTO channelToFindChannelDTO(Channel channel) {
-        return FindChannelDTO.builder()
-                .mcpName(channel.getNameOfMcp())
-                .name(channel.getNameOfChannel())
-                .externalId(channel.getExternalId())
-                .internalId(channel.getId())
-                .trusted(channel.isTrusted())
-                .uri(channel.getUri())
-                .build();
+        return channelMapper.channelToFindChannelDTO(channel);
     }
 
     @Override
     public List<FindChannelDTO> getChannelsByExternalId(String externalId) {
         List<Channel> dbChannels = db.getChannelsByExternalId(externalId);
         List<Channel> pluginChannels = plugins.getChannelsByExternalId(externalId);
+
         List<FindChannelDTO> foundChannels = new ArrayList<>();
 
         for (int i = 0; i < dbChannels.size(); i++) {
@@ -79,25 +76,15 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
     @Override
     public ChannelInfoDTO getChannelInfo(String internalId) {
         Channel channel = db.getChannelById(internalId);
-        ChannelInfoDTO info = ChannelInfoDTO.builder()
-                .acceptedRecordCount(channel.getAcceptedRecordCount())
-                .externalId(channel.getExternalId())
-                .internalId(channel.getId())
-                .lastRecordUploadTime(channel.getLastRecordUpload())
-                .mcpName(channel.getNameOfMcp())
-                .name(channel.getNameOfChannel())
-                .recordCount(channel.getRecordCount())
-                .trusted(channel.isTrusted())
-                .uri(channel.getUri())
-                .build();
+        ChannelInfoDTO info = channelMapper.channelToChannelInfoDTO(channel);
         return info;
     }
 
     @Override
     public void updateChannel(String internalId) {
         Channel channel = db.getChannelById(internalId);
-        Channel updatedChannel = plugins.getChannelByExternalId(channel.getExternalId(), channel.getNameOfMcp());
-        channel.setNameOfChannel(updatedChannel.getNameOfChannel());
+        Channel updatedChannel = plugins.getChannelByExternalId(channel.getExternalId(), channel.getMcpName());
+        channel.setName(updatedChannel.getName());
         // update more if needed
         db.updateChannel(channel);
     }
@@ -108,13 +95,7 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
     }
 
     private FindRecordDTO recordToFindRecordDTO(Record record) {
-        FindRecordDTO recordDTO = new FindRecordDTO();
-        recordDTO.setExternalId(record.getExternalId());
-        recordDTO.setInternalId(record.getId());
-        recordDTO.setMcpName(record.getNameOfMcp());
-        recordDTO.setName(record.getNameOfRecord());
-        recordDTO.setUri(record.getUri());
-        return recordDTO;
+        return recordMapper.recordToFindRecordDTO(record);
     }
 
     @Override
@@ -158,28 +139,19 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
     @Override
     public RecordInfoDTO getRecordInfo(String internalId) {
         Record record = db.getRecordById(internalId);
-        RecordInfoDTO info = RecordInfoDTO.builder()
-                .description(record.getDescription())
-                .externalId(record.getExternalId())
-                .internalId(record.getId())
-                .mcpName(record.getNameOfMcp())
-                .name(record.getNameOfRecord())
-                .stage(record.getStage())
-                .thumbnails(record.getThumbnail())
-                .uploaderExternalId(record.getUploaderExternalId())
-                .uri(record.getUri())
-                .build();
-        return info;
+        return recordMapper.recordToRecordInfoDTO(record);
     }
 
     @Override
     public void updateRecord(String internalId) {
         Record record = db.getRecordById(internalId);
-        Record updatedRecord = plugins.getRecordByExternalId(record.getExternalId(), record.getNameOfMcp());
+        Record updatedRecord = plugins.getRecordByExternalId(record.getExternalId(), record.getMcpName());
+
         record.setDescription(updatedRecord.getDescription());
-        record.setNameOfRecord(updatedRecord.getNameOfRecord());
+        record.setName(updatedRecord.getName());
         record.setThumbnail(updatedRecord.getThumbnail());
         record.setUri(updatedRecord.getUri());
+
         db.updateRecord(record);
     }
 
@@ -203,15 +175,27 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
     public void addAllNewMedia() {
         List<Channel> channels = db.getAllChannels();
         for (Channel channel : channels) {
-            List<Record> records = plugins.getRecordsByUploaderExternalId(channel.getExternalId(), channel.getNameOfMcp());
+            List<Record> records = plugins.getRecordsByUploaderExternalId(channel.getExternalId(), channel.getMcpName(), channel.getLastRecordUpload());
             for (Record record : records) {
                 db.putRecordToDB(record);
                 if (channel.isTrusted()) {
                     db.acceptRecord(record);
                 }
+                channel.registerNewRecord(record);
             }
 
         }
+    }
+
+    @Override
+    public List<PublicRecordDTO> getRecordsPage(int page) {
+        List<Record> records = db.getRecordPage(page);
+        List<PublicRecordDTO> rec = new ArrayList<>();
+        for (Record record :
+                records) {
+            rec.add(recordMapper.recordToPublicRecordDTO(record));
+        }
+        return rec;
     }
 
 }

@@ -1,15 +1,15 @@
 package dao;
 
+import static org.assertj.core.api.Assertions.*;
 import com.jts.mediahunter.core.CoreConfiguration;
 import com.jts.mediahunter.core.dao.ChannelDAO;
 import com.jts.mediahunter.domain.entities.Channel;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.assertj.core.api.Assertions.*;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.*;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,11 +24,19 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ContextConfiguration(classes = {CoreConfiguration.class})
+@Slf4j
 public class ChannelDAOTests {
 
     @Autowired
     private ChannelDAO channelDAO;
-    
+
+    @Rule
+    public TestRule watcher = new TestWatcher() {
+        protected void starting(Description description) {
+            log.info("Starting test: " + description.getMethodName());
+        }
+    };
+
     public ChannelDAOTests() {
     }
 
@@ -46,8 +54,8 @@ public class ChannelDAOTests {
     public void setUp() {
         this.sample1 = Channel.builder()
                 .externalId("externalID")
-                .nameOfChannel("Name of channel")
-                .nameOfMcp("Name of media content provider")
+                .name("Name of channel")
+                .mcpName("Name of media content provider")
                 .uri(UriComponentsBuilder.fromUriString("https://www.youtube.com/somesome?donthaveto=makesense").build().toUri())
                 .build();
     }

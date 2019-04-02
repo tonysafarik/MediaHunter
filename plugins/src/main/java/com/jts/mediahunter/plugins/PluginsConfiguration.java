@@ -13,10 +13,10 @@ import org.springframework.web.client.RestTemplate;
  * @author Jan Tony Safarik
  */
 @Configuration
-@ComponentScan
-@EnableAutoConfiguration
+@ComponentScan(basePackageClasses = PluginsConfiguration.class)
+@EnableAutoConfiguration // using to include RestTemplateBuilder
 public class PluginsConfiguration {
-    
+
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();

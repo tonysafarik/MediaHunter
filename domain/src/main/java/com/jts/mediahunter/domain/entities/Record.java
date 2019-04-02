@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -42,14 +41,14 @@ public class Record {
     private String uploaderExternalId;
 
     @NonNull
-    private String nameOfRecord;
+    private String name;
 
     /**
      * name of the media content provider (MCP) (must be unified for all media
      * from one service!)
      */
     @NonNull
-    private String nameOfMcp;
+    private String mcpName;
 
     /**
      * URI of the record
@@ -87,7 +86,7 @@ public class Record {
      * @return
      */
     public boolean isSameAs(Record record) {
-        return record.getExternalId().equals(this.externalId) && record.getNameOfMcp().equals(this.nameOfMcp);
+        return record.getExternalId().equals(this.externalId) && record.getMcpName().equals(this.mcpName);
     }
 
 }

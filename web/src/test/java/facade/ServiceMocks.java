@@ -38,8 +38,8 @@ public class ServiceMocks {
             Channel newChannel = Channel.builder()
                     .externalId(channel.getExternalId())
                     .id(id)
-                    .nameOfChannel(channel.getNameOfChannel())
-                    .nameOfMcp(channel.getNameOfMcp())
+                    .name(channel.getName())
+                    .mcpName(channel.getMcpName())
                     .trusted(channel.isTrusted())
                     .uri(channel.getUri())
                     .build();
@@ -84,7 +84,7 @@ public class ServiceMocks {
             String externalId = invocation.getArgument(0);
             String nameOfMCP = invocation.getArgument(1);
             for (Channel channel : channels) {
-                if (channel.getExternalId().equals(externalId) && channel.getNameOfMcp().equals(nameOfMCP)) {
+                if (channel.getExternalId().equals(externalId) && channel.getMcpName().equals(nameOfMCP)) {
                     return channel;
                 }
             }

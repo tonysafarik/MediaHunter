@@ -1,7 +1,7 @@
 package com.jts.mediahunter.web.controller;
 
-import com.jts.mediahunter.web.dto.ChannelInfoDTO;
-import com.jts.mediahunter.web.dto.FindChannelDTO;
+import com.jts.mediahunter.domain.dto.ChannelInfoDTO;
+import com.jts.mediahunter.domain.dto.FindChannelDTO;
 import com.jts.mediahunter.web.facade.AdministrationFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

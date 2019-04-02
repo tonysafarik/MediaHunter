@@ -4,20 +4,16 @@ import com.jts.mediahunter.core.service.DatabaseService;
 import com.jts.mediahunter.core.service.PluginService;
 import com.jts.mediahunter.domain.entities.Channel;
 import com.jts.mediahunter.web.WebAdminApplication;
-import com.jts.mediahunter.web.WebConfiguration;
-import com.jts.mediahunter.web.dto.ChannelInfoDTO;
-import com.jts.mediahunter.web.dto.FindChannelDTO;
+import com.jts.mediahunter.domain.dto.ChannelInfoDTO;
+import com.jts.mediahunter.domain.dto.FindChannelDTO;
 import com.jts.mediahunter.web.facade.AdministrationFacade;
-import com.jts.mediahunter.web.facade.AdministrationFacadeImpl;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.*;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.UriComponentsBuilder;
 import static org.assertj.core.api.Assertions.*;
@@ -33,6 +29,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = WebAdminApplication.class)
+@Slf4j
 public class AdministrationFacadeTests {
     
     @Autowired
@@ -43,7 +40,14 @@ public class AdministrationFacadeTests {
     
     @MockBean
     private PluginService plugins;
-    
+
+    @Rule
+    public TestRule watcher = new TestWatcher() {
+        protected void starting(Description description) {
+            log.info("Starting test: " + description.getMethodName());
+        }
+    };
+
     private final List<Channel> channelDatabase = new ArrayList<>();
     private final List<Channel> channelPlugins = new ArrayList<>();
     
@@ -63,8 +67,8 @@ public class AdministrationFacadeTests {
         channelDatabase.add(Channel.builder()
                 .externalId(externalId)
                 .id(String.valueOf(channelDatabase.size()))
-                .nameOfChannel("name of channel " + externalId)
-                .nameOfMcp(MCP)
+                .name("name of channel " + externalId)
+                .mcpName(MCP)
                 .trusted(trusted)
                 .uri(UriComponentsBuilder.fromPath("https://something.com/" + externalId).build().toUri())
                 .build());
@@ -75,8 +79,8 @@ public class AdministrationFacadeTests {
     private void createPluginChannel(String externalId, String MCP, boolean trusted){
         channelPlugins.add(Channel.builder()
                 .externalId(externalId)
-                .nameOfChannel("name of channel " + externalId)
-                .nameOfMcp(MCP)
+                .name("name of channel " + externalId)
+                .mcpName(MCP)
                 .trusted(trusted)
                 .uri(UriComponentsBuilder.fromPath("https://something.com/" + externalId).build().toUri())
                 .build());
@@ -100,7 +104,7 @@ public class AdministrationFacadeTests {
         List<FindChannelDTO> channels = admin.getChannelsByExternalId("coolstuff");
         assertThat(channels).hasSize(2).extracting("externalId").containsOnly("coolstuff");
         assertThat(channels).extracting("mcpName").containsExactlyInAnyOrder("YouTube", "Vimeo");
-        assertThat(channels).extracting("internalId").containsExactlyInAnyOrder(null, String.valueOf(0));
+        assertThat(channels).extracting("id").containsExactlyInAnyOrder(null, String.valueOf(0));
     }
     
     @Test
@@ -119,9 +123,9 @@ public class AdministrationFacadeTests {
     @Test
     public void updateChannelCorrect(){
         Channel channel = channelPlugins.get(0);
-        channel.setNameOfChannel("newName");
+        channel.setName("newName");
         admin.updateChannel("0");
-        assertThat(channelDatabase.get(channelDatabase.size()-1).getNameOfChannel()).isEqualTo("newName");
+        assertThat(channelDatabase.get(channelDatabase.size()-1).getName()).isEqualTo("newName");
     }
     
     @Test

@@ -33,6 +33,7 @@ README.html
 /plugins/nbproject/
 /web/nbproject/
 nbactions.xml
+start.sh
 
 ### VS Code ###
 .vscode

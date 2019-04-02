@@ -1,12 +1,11 @@
 package com.jts.mediahunter.web.controller;
 
-import com.jts.mediahunter.web.dto.FindRecordDTO;
-import com.jts.mediahunter.web.dto.RecordInfoDTO;
+import com.jts.mediahunter.domain.dto.FindRecordDTO;
+import com.jts.mediahunter.domain.dto.RecordInfoDTO;
 import com.jts.mediahunter.web.facade.AdministrationFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,21 +60,21 @@ public class RecordController {
     }
     
     @GetMapping("/update")
-    public String updateRecord(@RequestParam(name="internalId") String internalId, RedirectAttributes redAttr){
+    public String updateRecord(@RequestParam(name="id") String internalId, RedirectAttributes redAttr){
         admin.updateRecord(internalId);
         redAttr.addAttribute("id", internalId);
         return "redirect:/record/show";
     }
     
     @GetMapping("/accept")
-    public String acceptRecord(@RequestParam(name="internalId") String internalId, RedirectAttributes redAttr){
+    public String acceptRecord(@RequestParam(name="id") String internalId, RedirectAttributes redAttr){
         admin.acceptRecord(internalId);
         redAttr.addAttribute("id", internalId);
         return "redirect:/record/show";
     }
     
     @GetMapping("/reject")
-    public String rejectRecord(@RequestParam(name="internalId") String internalId, RedirectAttributes redAttr){
+    public String rejectRecord(@RequestParam(name="id") String internalId, RedirectAttributes redAttr){
         admin.rejectRecord(internalId);
         redAttr.addAttribute("id", internalId);
         return "redirect:/record/show";

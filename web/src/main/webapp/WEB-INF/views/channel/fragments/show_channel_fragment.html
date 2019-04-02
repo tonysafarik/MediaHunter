@@ -13,12 +13,12 @@
     <div th:fragment="showChannel_v1">
         <h2 th:text="${channel.name}">Name of channel</h2>
         <h4 th:text="${channel.mcpName}">MCP name</h4>
-        <span>Internal ID: </span><span th:text="${channel.internalId}">value</span><br>
+        <span>Internal ID: </span><span th:text="${channel.id}">value</span><br>
         <span>External ID: </span><span th:text="${channel.externalId}">value</span><br>
         <span>Link to Channel: </span><a href="#" th:href="${channel.uri}" th:text="${channel.uri}">value</a><br>
         <span>Number of records: </span><span th:text="${channel.recordCount}">value</span><br>
         <span>Number of accepted records: </span><span th:text="${channel.acceptedRecordCount}">value</span><br>
-        <span>Date and time of last record upload: </span><span th:text="${channel.lastRecordUploadTime}">value</span><br>
+        <span>Date and time of last record upload: </span><span th:text="${channel.lastRecordUpload}">value</span><br>
         <span>Trusted channel: </span><span th:text="${channel.trusted}">value</span><br>
     </div>
 

@@ -20,7 +20,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- *
  * @author Tony
  */
 @Repository
@@ -55,8 +54,8 @@ public class YouTube implements MediaContentProviderPlugin {
             YouTubeChannel channel = channelList.getChannels().get(0);
             return Channel.builder()
                     .externalId(channel.getExternalId())
-                    .nameOfChannel(channel.getName())
-                    .nameOfMcp(SERVICE_NAME)
+                    .name(channel.getName())
+                    .mcpName(SERVICE_NAME)
                     .uri(channel.getUri())
                     .build();
         }
@@ -106,8 +105,8 @@ public class YouTube implements MediaContentProviderPlugin {
         return Record.builder()
                 .description(record.getDescription())
                 .externalId(record.getVideoId())
-                .nameOfMcp(this.SERVICE_NAME)
-                .nameOfRecord(record.getName())
+                .mcpName(this.SERVICE_NAME)
+                .name(record.getName())
                 .thumbnail(record.getThumbnail())
                 .uploadTime(record.getUploadTime())
                 .uploaderExternalId(record.getUploaderExternalId())
@@ -196,10 +195,11 @@ public class YouTube implements MediaContentProviderPlugin {
         }
 
         for (YouTubeRecord record : videoList.getRecords()) {
-            if (record.getUploadTime().isBefore(oldestRecord)) {
-                return videos;
+            if (record.getUploadTime().isAfter(oldestRecord)) {
+                videos.add(youTubeRecordToRecord(record));
+                continue;
             }
-            videos.add(youTubeRecordToRecord(record));
+            return videos;
         }
         if (videoList.getNextPageTogen() != null) {
             parameters = Arrays.copyOf(parameters, parameters.length + 2);
@@ -213,10 +213,11 @@ public class YouTube implements MediaContentProviderPlugin {
             videoList = rest.getForObject(uri, YouTubeRecordList.class);
             if (videoList != null) {
                 for (YouTubeRecord record : videoList.getRecords()) {
-                    if (record.getUploadTime().isBefore(oldestRecord)) {
-                        return videos;
+                    if (record.getUploadTime().isAfter(oldestRecord)) {
+                        videos.add(youTubeRecordToRecord(record));
+                        continue;
                     }
-                    videos.add(youTubeRecordToRecord(record));
+                    return videos;
                 }
             }
         }

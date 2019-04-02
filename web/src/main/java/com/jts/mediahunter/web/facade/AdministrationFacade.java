@@ -1,9 +1,6 @@
 package com.jts.mediahunter.web.facade;
 
-import com.jts.mediahunter.web.dto.ChannelInfoDTO;
-import com.jts.mediahunter.web.dto.FindChannelDTO;
-import com.jts.mediahunter.web.dto.FindRecordDTO;
-import com.jts.mediahunter.web.dto.RecordInfoDTO;
+import com.jts.mediahunter.domain.dto.*;
 import java.util.List;
 
 /**
@@ -14,7 +11,7 @@ public interface AdministrationFacade {
 
     /**
      * Gets all channels from Media Content Providers (MCP) and DB and combines
-     * them. Channels with internalId != null are already in database.
+     * them. Channels with id != null are already in database.
      *
      * @param externalId ID provided by MCP
      * @return
@@ -27,12 +24,12 @@ public interface AdministrationFacade {
      * @param externalId ID provided by Media Content Provider (MCP)
      * @param mcpName name of MCP - used for decision which plugin to use
      * @param trusted wether channel records should go straight to accepted stage
-     * @return ID created by DB (internalId)
+     * @return ID created by DB (id)
      */
     public String putChannelToDB(String externalId, String mcpName, boolean trusted);
 
     /**
-     * Finds and return all information about channel with given internalId
+     * Finds and return all information about channel with given id
      * (from DB)
      *
      * @param internalId
@@ -41,7 +38,7 @@ public interface AdministrationFacade {
     public ChannelInfoDTO getChannelInfo(String internalId);
 
     /**
-     * Updates channel with given internalId
+     * Updates channel with given id
      *
      * @param internalId
      */
@@ -71,5 +68,7 @@ public interface AdministrationFacade {
     public void rejectRecord(String internalId);
     
     public void addAllNewMedia();
+
+    public List<PublicRecordDTO> getRecordsPage(int page);
     
 }
