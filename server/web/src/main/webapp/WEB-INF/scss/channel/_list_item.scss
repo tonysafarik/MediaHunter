@@ -1,0 +1,119 @@
+$border-color: #EEE;
+
+$item-border: #BBE1BB;
+$item-border-hover: #6A6;
+$item-highlight-text: #CCC;
+$item-highlight-text-hover: #2A2;
+
+$new-item-border: #BBB;
+$new-item-border-hover: #666;
+$new-item-highlight-text: #CCC;
+$new-item-highlight-text-hover: #333;
+
+.DB_list_item {
+    width: 30%;
+    min-width: 300px;
+    margin: 0 auto;
+    font-family: calibri;
+    transition-duration: 0.2s;
+    padding: 10px 0;
+    border-top: 1px solid $border-color;
+    border-bottom: 1px solid $border-color;
+
+    a {
+        text-decoration: none;
+    }
+
+    .info {
+        padding-left: 20px;
+        margin: 10px 0;
+        transition-duration: 0.6s;
+        border-left: 5px solid $item-border;
+
+        h2, h5 {
+            margin: 0;
+            color: $item-highlight-text;
+            transition-duration: 0.6s;
+        }
+    }
+
+    &:hover {
+        .info {
+            border-left: 5px solid $item-border-hover;
+            padding-left: 30px;
+
+            h2 {
+                color: $item-highlight-text-hover;
+            }
+        }
+    }
+}
+
+.MCP_list_item {
+    @extend .DB_list_item;
+
+    .info {
+        border-left: 5px solid $new-item-border;
+
+        h2, h5 {
+            color: $new-item-highlight-text;
+        }
+    }
+
+    &:hover {
+        .info {
+            border-left: 5px solid $new-item-border-hover;
+
+            h2 {
+                color: $new-item-highlight-text-hover;
+            }
+        }
+    }
+
+    form {
+        display: flex;
+
+        .trusted {
+            span {
+                display: block;
+                width: 100%;
+                height: 100%;
+                text-align: center;
+                line-height: 30px;
+                transition-duration: 0.2s;
+                background-color: #EEE;
+                cursor: pointer;
+                &:hover {
+                    background-color: #9DA;
+                }
+            }
+
+            input[type="checkbox"] {
+                display: none;
+                transition-duration: 0.4s;
+
+                &:checked {
+                    & + span {
+                        background-color: rgb(70, 156, 75);
+                        color: #E5E5E5;
+                    }
+                }
+            }
+
+            flex-basis: 30%;
+        }
+
+        input[type="submit"] {
+            flex-grow: 1;
+            height: 30px;
+            border: none;
+            background-color: $new-item-border;
+            cursor: pointer;
+            transition-duration: 0.4s;
+
+            &:hover {
+                background-color: $item-border-hover;
+            }
+        }
+    }
+}

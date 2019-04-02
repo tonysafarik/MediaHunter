@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html layout:decorate="~{/layouts/main_layout}">
+    <head>
+        <title>Show record</title>
+    </head>
+    <body>
+        <div layout:fragment="content">
+                <h1 class="content_title">Channel Info:</h1>
+            <div th:replace="channel/fragments/show_channel_fragment :: showChannel_v1"></div>
+        </div>
+    </body>
+</html>

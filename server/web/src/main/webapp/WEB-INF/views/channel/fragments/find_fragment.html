@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>channel fragments</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" media="screen" href="../../../../resources/css/main_layout.css" />
+</head>
+
+<body>
+
+    <div th:fragment="channelFindForm_v1">
+        <form class="find_form" name="addChannel" action="#" th:action="@{/channel/list}" th:object="${string}"
+            th:method="get">
+            <input type="text" name="channelId" placeholder="Channel ID">
+            <input type="submit" value="Find">
+        </form>
+    </div>
+
+</body>
+
+</html>

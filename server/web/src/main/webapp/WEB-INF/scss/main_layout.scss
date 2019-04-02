@@ -1,0 +1,14 @@
+body {
+    margin: 0;
+}
+
+.content_title{
+    text-align: center;
+    font-family: calibri;
+    font-weight: normal;
+}
+
+@import "menu";
+@import "home";
+@import "channel";
+@import "entity_info";
