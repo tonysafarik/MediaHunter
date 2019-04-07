@@ -1,0 +1,44 @@
+.Channel .logo {
+    margin: 0 15px;
+    align-self: center;
+}
+
+.Channel .content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    overflow: hidden;
+    margin-right: 30px;
+    width: 100%;
+}
+
+.Channel .content span {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden !important;
+}
+
+.Channel {
+    display: flex;
+    height: 100px;
+    width: 100%;
+    margin: 5px 0;
+}
+
+.Channel .name {
+    font-size: 17px;
+}
+
+.TrustedBadge {
+    font-family: Roboto Condensed;
+    font-weight: 700;
+    text-transform: uppercase;
+    background-color: #66B666;
+    border-radius: 3px;
+    padding: 4px 5px;
+    color: #FFF;
+    display: inline-block;
+    text-shadow: 0px 0px 18px rgba(0,0,0,0.3);
+    border: 1px solid rgba(0%, 0%, 0%, 0.2);
+    font-size: 11px;
+}

@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed:300,700');
+
+.Header {
+    background-color: #16181B;
+    font-family: Calibri;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+}
+
+.HamburgerMenu {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    margin: 25px;
+}
+
+.toggled .bar:nth-child(1){
+    transform: translate(0px, 9.5px) rotate(-45deg);
+}
+
+.toggled .bar:nth-child(2){
+    opacity: 0;
+}
+
+.toggled .bar:nth-child(3){
+    transform: translate(0px, -8px) rotate(45deg);
+}
+
+.Header .logo {
+    text-transform: uppercase;
+    font-family: Roboto Condensed;
+    color: #DDD;
+    margin: 0 20px;
+}
+
+.bar {
+    margin: 3px 0;
+    width: 25px;
+    height: 3px;
+    background-color: #DDD;
+    transition: 0.5s;
+}
