@@ -98,7 +98,7 @@ public class YouTubeTests {
     public void getAllChannelRecordsCorrect() {
         List<Record> records = yt.getAllChannelRecords("UCZdunuduJOFxxK0R41o4X-A");
 
-        assertThat(records).hasSize(41).extracting("name").contains("JEDLA - 2011 - HBOK crew",
+        assertThat(records).hasSize(45).extracting("name").contains("JEDLA - 2011 - HBOK crew",
                 "ONE MINUTE EDIT - Martin \"Santos\" Charvát",
                 "Tom - One Trick",
                 "Filip Samsonek - HBOK crew - Still Here, Still Blading",

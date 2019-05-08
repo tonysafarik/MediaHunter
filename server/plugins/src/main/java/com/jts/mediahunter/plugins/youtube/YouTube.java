@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -23,6 +25,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * @author Tony
  */
 @Repository
+@Slf4j
 public class YouTube implements MediaContentProviderPlugin {
 
     @Autowired
@@ -72,13 +75,11 @@ public class YouTube implements MediaContentProviderPlugin {
      * @return
      */
     private URI buildURIForHTTPRequest(String path, String[] parameters) {
-        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(API_URI);
-        builder.path(path);
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(API_URI).path(path);
         for (int i = 0; i < parameters.length; i += 2) {
             builder.queryParam(parameters[i], parameters[i + 1]);
         }
-        URI uri = builder.build().toUri();
-        return uri;
+        return builder.build().toUri();
     }
 
     @Override

@@ -59,18 +59,24 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
     }
 
     @Override
-    public String putChannelToDB(String externalId, String mcpName, boolean trusted) {
-        Channel channel = plugins.getChannelByExternalId(externalId, mcpName);
-        channel.setTrusted(trusted);
-        List<Record> records = plugins.getRecordsByUploaderExternalId(externalId, mcpName);
-        for (Record record : records) {
-            db.putRecordToDB(record);
-            if (trusted) {
-                db.acceptRecord(record);
+    public ChannelInfoDTO putChannelToDB(String externalId, String mcpName, boolean trusted) {
+        if (!RequestStorage.isPresent(externalId, mcpName)) {
+            RequestStorage.addToChannelStorage(externalId, mcpName);
+            Channel channel = plugins.getChannelByExternalId(externalId, mcpName);
+            channel.setTrusted(trusted);
+            List<Record> records = plugins.getRecordsByUploaderExternalId(externalId, mcpName);
+            for (Record record : records) {
+                db.putRecordToDB(record);
+                if (trusted) {
+                    db.acceptRecord(record);
+                }
+                channel.registerNewRecord(record);
             }
-            channel.registerNewRecord(record);
+            channel = db.putChannelToDB(channel);
+            RequestStorage.removeFromChannelStorage(externalId, mcpName);
+            return channelMapper.channelToChannelInfoDTO(channel);
         }
-        return db.putChannelToDB(channel);
+        return null;
     }
 
     @Override

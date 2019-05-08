@@ -3,6 +3,7 @@ package com.jts.mediahunter.core.service;
 import com.jts.mediahunter.core.dao.ChannelDAO;
 import com.jts.mediahunter.core.dao.RecordDAO;
 import com.jts.mediahunter.domain.RecordStage;
+import com.jts.mediahunter.domain.dto.ChannelInfoDTO;
 import com.jts.mediahunter.domain.entities.Channel;
 import com.jts.mediahunter.domain.entities.Record;
 import java.util.List;
@@ -32,7 +33,7 @@ public class DatabaseServiceImpl implements DatabaseService {
     }
 
     @Override
-    public String putChannelToDB(Channel channel) {
+    public Channel putChannelToDB(Channel channel) {
         Channel inserted = channelDAO.insert(channel);
 
         if (inserted.getId() != null) {
@@ -41,7 +42,7 @@ public class DatabaseServiceImpl implements DatabaseService {
             log.error("Channel: " + channel.toString() + " NOT inserted successfully");
         }
 
-        return inserted.getId();
+        return inserted;
     }
 
     @Override

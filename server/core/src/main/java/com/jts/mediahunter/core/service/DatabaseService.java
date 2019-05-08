@@ -1,5 +1,6 @@
 package com.jts.mediahunter.core.service;
 
+import com.jts.mediahunter.domain.dto.ChannelInfoDTO;
 import com.jts.mediahunter.domain.entities.Channel;
 import com.jts.mediahunter.domain.entities.Record;
 
@@ -14,7 +15,7 @@ public interface DatabaseService {
 
     public Channel getChannelById(String internalId);
 
-    public String putChannelToDB(Channel channel);
+    public Channel putChannelToDB(Channel channel);
 
     public void updateChannel(Channel channel);
 

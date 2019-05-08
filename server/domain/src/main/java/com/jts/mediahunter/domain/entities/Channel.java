@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
@@ -31,6 +32,7 @@ public class Channel {
      * ID provided by the media service
      */
     @NonNull
+    @Indexed
     private String externalId;
 
     @NonNull

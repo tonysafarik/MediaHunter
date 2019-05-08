@@ -1,6 +1,8 @@
 package com.jts.mediahunter.web.facade;
 
 import com.jts.mediahunter.domain.dto.*;
+import com.jts.mediahunter.domain.entities.Channel;
+
 import java.util.List;
 
 /**
@@ -26,7 +28,7 @@ public interface AdministrationFacade {
      * @param trusted wether channel records should go straight to accepted stage
      * @return ID created by DB (id)
      */
-    public String putChannelToDB(String externalId, String mcpName, boolean trusted);
+    public ChannelInfoDTO putChannelToDB(String externalId, String mcpName, boolean trusted);
 
     /**
      * Finds and return all information about channel with given id

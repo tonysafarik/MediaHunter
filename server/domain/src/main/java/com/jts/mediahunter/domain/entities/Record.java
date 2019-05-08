@@ -75,6 +75,7 @@ public class Record {
 
     @NonNull
     @Builder.Default
+    @Indexed(direction = IndexDirection.ASCENDING, name = "stage")
     private RecordStage stage = RecordStage.UNKNOWN;
     
     /**

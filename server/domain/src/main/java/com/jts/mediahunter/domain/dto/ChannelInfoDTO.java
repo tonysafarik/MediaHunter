@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.Builder;
 
 /**
- *
+ * Contains all information about channel entity
  * @author Tony
  */
 @Data

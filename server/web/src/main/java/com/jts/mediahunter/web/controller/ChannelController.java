@@ -5,11 +5,9 @@ import com.jts.mediahunter.domain.dto.FindChannelDTO;
 import com.jts.mediahunter.web.facade.AdministrationFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -18,8 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  *
  * @author Tony
  */
-@Controller
-@RequestMapping("/channel")
+//@Controller
+//@RequestMapping("/channel")
 public class ChannelController {
 
     @Autowired
@@ -40,7 +38,7 @@ public class ChannelController {
 
     @PostMapping("/put")
     public String putChannelToDB(@RequestParam(name = "externalId") String externalId, @RequestParam(name = "mcpName") String mcpName, @RequestParam(name = "trusted", required = false) boolean trusted, RedirectAttributes redAttr) {
-        String id = admin.putChannelToDB(externalId, mcpName, trusted);
+        ChannelInfoDTO id = admin.putChannelToDB(externalId, mcpName, trusted);
         redAttr.addAttribute("id", id);
         return "redirect:/channel/show";
     }

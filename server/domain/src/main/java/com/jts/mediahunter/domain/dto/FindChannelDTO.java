@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 /**
- *
+ * Contains only information necessary to display simple list of channels
  * @author Tony
  */
 @Data

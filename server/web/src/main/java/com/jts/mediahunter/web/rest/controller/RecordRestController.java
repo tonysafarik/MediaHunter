@@ -14,7 +14,7 @@ public class RecordRestController {
     @Autowired
     private AdministrationFacade admin;
 
-    @GetMapping("/records({page})")
+    @GetMapping("/records/{page}")
     public List<PublicRecordDTO> pageOfRecords(@PathVariable("page") int page){
 
         return admin.getRecordsPage(page);
