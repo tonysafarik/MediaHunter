@@ -1,0 +1,64 @@
+.RecordListItem {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100px;
+  width: 100%;
+  margin: 5px 0;
+}
+
+.RecordListItem a,
+.RecordListItem a:hover,
+.RecordListItem a:active,
+.RecordListItem a:visited {
+  font-size: 17px;
+  text-decoration: none;
+  color: initial;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+}
+
+.RecordListItem .description {
+  font-size: 12px;
+}
+
+.RecordListItem .mcpName {
+  font-size: 10px;
+  color: #555;
+}
+
+.RecordListItem .name {
+  font-size: 17px;
+}
+
+.RecordListItem .thumbnail {
+  margin: 0 15px;
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+}
+
+.RecordListItem .content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  overflow: hidden;
+  width: 100%;
+  margin: 12px 30px 12px 0;
+}
+
+.RecordListItem .content span {
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden !important;
+}

@@ -1,0 +1,22 @@
+.FindForm {
+    width: 90%;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.TextInput {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-family: calibri;
+    font-size: 1.2em;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    &:focus {
+        outline: none;
+    }
+}

@@ -1,0 +1,17 @@
+.RequestList {
+    display: none;
+    overflow-y: scroll;
+    max-height: 60%;
+    position: fixed;
+    width: 30%;
+    min-width: 200px;
+    right: 3px;
+    top: 83px;
+    background-color: #eee;
+    flex-direction: column;
+    transition: 1s ease-in-out;
+
+    &.visible {
+        display: flex;
+    }
+}

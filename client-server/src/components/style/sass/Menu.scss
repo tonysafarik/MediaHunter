@@ -1,0 +1,66 @@
+.Menu {
+    position: fixed;
+    top: 80px;
+    width: 0;
+    height: 100%;
+    background-color: #0F1013;
+    font-family: Roboto Condensed;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #EEE;
+    transition: 1s ease-in-out;
+    overflow: hidden;
+    margin: 0;
+    z-index: 99;
+
+    &.visible {
+        width: 100%;
+    }
+
+    ul {
+        margin: 0;
+        padding: 0;
+
+        li {
+            list-style-type: none;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            border-left: 3px solid black;
+            transition: 0.5s;
+            white-space: nowrap;
+
+            &:hover {
+                border-left: 6px solid #446188;
+            }
+
+            .MenuLink,
+            .MenuLink:visited,
+            .MenuLink:active {
+                margin: 10px 0 10px 25px;
+                width: 100%;
+                text-decoration: none;
+                color: #EEE;
+            }
+
+            a {
+                margin: 10px 0 10px 25px;
+                width: 100%;
+            }
+
+            .CloseMenuButton {
+                height: 50px;
+                overflow: hidden;
+                float: right;
+            }
+
+            .rot-45 {
+                transform: rotate(-45deg);
+            }
+
+            .rot45 {
+                transform: rotate(45deg);
+            }
+        }
+    }
+}

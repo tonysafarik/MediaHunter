@@ -1,9 +1,12 @@
 import * as React from 'react';
-import Header from './header/header';
-import Menu from './menu/menu';
-import ChannelList from './channel/ChannelList';
+import Header from './header/Header';
+import Menu from './Menu';
 
-class MediaHunterApp extends React.Component {
+interface Props {
+
+}
+
+class UITemplate extends React.Component<Props> {
     state = {
         menuVisibility: false
     }
@@ -16,8 +19,9 @@ class MediaHunterApp extends React.Component {
                 />
                 <Menu
                     visibility={this.state.menuVisibility}
+                    onMenuItemClick={() => this.handleMenuButtonClick()}
                 />
-                <ChannelList />
+                {this.props.children}
             </React.Fragment>
         );
     }
@@ -26,7 +30,6 @@ class MediaHunterApp extends React.Component {
         const menuVisibility = !this.state.menuVisibility;
         this.setState({ menuVisibility });
     }
-
 }
 
-export default MediaHunterApp;
+export default UITemplate;

@@ -1,0 +1,118 @@
+.overlay {
+  position: fixed;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.55);
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  z-index: 0;
+}
+
+.ChannelRegisterForm {
+  padding: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background-color: rgba(250, 250, 250, 0.9);
+  z-index: 1;
+  min-width: 200px;
+  max-width: 100%;
+}
+
+.ChannelRegisterForm .HamburgerMenu {
+  margin: 0 0 5px 0;
+  -ms-flex-item-align: end;
+      align-self: flex-end;
+}
+
+.ChannelRegisterForm .HamburgerMenu .bar {
+  background-color: #555;
+}
+
+.ChannelRegisterForm .trust {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: row;
+          flex-flow: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-bottom: 15px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.ChannelRegisterForm .register {
+  width: 100%;
+  background: #BBB;
+  border-radius: 5px;
+  border: 1px solid #999;
+}
+
+.ChannelRegisterForm .register span {
+  display: block;
+  margin: 8px 15px;
+}
+
+.ChannelRegisterForm a,
+.ChannelRegisterForm a:visited,
+.ChannelRegisterForm a:hover,
+.ChannelRegisterForm a:active {
+  text-decoration: none;
+  color: #222;
+  max-width: 100%;
+}
+
+.ChannelRegisterForm .ItemName {
+  font-size: 2em;
+  line-height: 1em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.ChannelRegisterForm .McpName {
+  font-size: 10px;
+}
+
+.ChannelRegisterForm .detail {
+  margin: 30px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column;
+          flex-flow: column;
+  max-width: 100%;
+}
+
+.ChannelRegisterForm .detail span {
+  word-wrap: break-word;
+}

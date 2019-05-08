@@ -1,0 +1,42 @@
+.Login {
+    height: 100%;
+    width: 100%;
+    color: #EEE;
+    background-color: #0F1013;
+    display: flex;
+    align-items: center;
+    flex-flow: column;
+    justify-content: space-around;
+
+    .Logo {
+        margin-top: 50px;
+        font-size: 25px;
+    }
+
+    form {
+        display: flex;
+        flex-flow: column;
+        width: 70%;
+
+        input {
+            text-align: left;
+            font-family: Roboto Condensed;
+            margin: 8px 0;
+            height: 2em;
+        }
+
+        .ButtonLink {
+            border: 1px solid #B83323;
+            border-bottom: 5px solid #B83323;
+            background-color: #E35949;
+            margin: 8px 0;
+            line-height: 2em;
+            color: #EEE;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-family: Roboto Condensed;
+        }
+
+    }
+
+}
