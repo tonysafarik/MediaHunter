@@ -50,7 +50,7 @@ public class YouTube implements MediaContentProviderPlugin {
         String[] parameters = {"part", "snippet", "id", channelId, "maxResults", "50", "key", this.API_KEY};
 
         URI uri = buildURIForHTTPRequest("/channels", parameters);
-
+        log.info(uri.toString());
         YouTubeChannelList channelList = rest.getForObject(uri, YouTubeChannelList.class);
 
         if (channelList != null) {

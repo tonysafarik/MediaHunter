@@ -3,6 +3,8 @@ package com.jts.mediahunter.domain.dto;
 import com.jts.mediahunter.domain.RecordStage;
 import com.jts.mediahunter.domain.Thumbnail;
 import java.net.URI;
+import java.time.LocalDateTime;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -23,5 +25,6 @@ public class RecordInfoDTO {
     private Thumbnail thumbnail;
     private String description;
     private RecordStage stage;
+    private LocalDateTime uploadTime;
     
 }

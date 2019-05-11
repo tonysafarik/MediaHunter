@@ -13,9 +13,9 @@ export class HamburgerMenu extends React.Component<Props> {
             toggled = " toggled";
         return (
             <div className={"HamburgerMenu".concat(toggled)} onClick={() => this.props.onMenuButtonClick()}>
-                <div className="bar"></div>
-                <div className="bar"></div>
-                <div className="bar"></div>
+                <div className="bar" />
+                <div className="bar" />
+                <div className="bar" />
             </div>);
     }
 }

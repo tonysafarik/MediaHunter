@@ -8,7 +8,7 @@
     background-color: rgba(0, 0, 0, 0.55);
     justify-content: center;
     align-items: center;
-    z-index: 0;
+    z-index: 1;
 }
 
 .ChannelRegisterForm {
@@ -45,6 +45,7 @@
         background: #BBB;
         border-radius: 5px;
         border: 1px solid #999;
+        cursor: pointer;
         span {
             display: block;
             margin: 8px 15px;

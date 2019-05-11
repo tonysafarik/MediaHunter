@@ -1,12 +1,28 @@
 .StageBadge {
-    font-family: Roboto Condensed;
-    font-weight: 700;
-    text-transform: uppercase;
+  font-family: Roboto Condensed;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 3px;
+  padding: 4px 5px;
+  color: #FFF;
+  text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0%, 0%, 0%, 0.2);
+  font-size: 11px;
+
+  &.accepted {
+    background-color: #66B666;
+  }
+
+  &.rejected {
     background-color: #B66666;
-    border-radius: 3px;
-    padding: 4px 5px;
-    color: #FFF;
-    text-shadow: 0px 0px 18px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(0%, 0%, 0%, 0.2);
-    font-size: 11px;
+  }
+
+  &.waiting {
+    background-color: #B6B666;
+  }
+
+  &.unknown {
+    background-color: #B6B6B6;
+  }
+
 }

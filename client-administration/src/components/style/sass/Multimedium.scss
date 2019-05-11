@@ -1,0 +1,105 @@
+.MultimediumBackground {
+  flex-direction: column;
+
+  .LoadingCircle {
+    margin: 20px auto;
+  }
+}
+
+.Multimedium {
+  display: flex;
+  flex-wrap: wrap;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 3px -1px rgba(0, 0, 0, 0.3);
+  width: 99.5%;
+  margin: 0 auto;
+
+  @media only screen and (min-width: 600px) {
+    margin: 30px auto;
+    width: 70%;
+  }
+
+  .StageStatus {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    margin-bottom: 30px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    font-size: 11px;
+
+    .Stage {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(0,0,0,0.2);
+      font-weight: bolder;
+      opacity: 0.4;
+
+      &.Selected {
+        opacity: 0.9;
+        cursor: auto;
+      }
+
+      &.ACCEPTED {
+        background-color: #66B666;
+      }
+
+      &.REJECTED {
+        background-color: #B66666;
+      }
+
+      &.WAITING {
+        background-color: #B6B666;
+      }
+
+      &.UNKNOWN {
+        background-color: #B6B6B6;
+      }
+    }
+  }
+
+  img {
+    width: 100%;
+  }
+
+  a,
+  a:visited,
+  a:hover,
+  a:active {
+    text-decoration: none;
+    color: #222;
+    max-width: 100%;
+  }
+
+  .ItemName {
+    font-size: 2em;
+    line-height: 1em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+
+  .McpName {
+    font-size: 10px;
+  }
+
+  .EntityDetail {
+    margin: 30px 0;
+    display: flex;
+    flex-flow: column;
+    max-width: 100%;
+
+    span {
+      word-wrap: break-word;
+    }
+  }
+}

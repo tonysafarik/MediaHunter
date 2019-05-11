@@ -6,6 +6,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
@@ -18,60 +28,48 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 @EnableScheduling
-public class WebConfiguration implements WebMvcConfigurer {
+@EnableWebSecurity
+public class WebConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private ApplicationContext applicationContext;
-    
-    
-    // ***************************************
-    // ******* THYMELEAF CONFIGURATION *******
-    // ***************************************
-    @Bean
-    public SpringResourceTemplateResolver templateResolver() {
-        // SpringResourceTemplateResolver automatically integrates with Spring's own
-        // resource resolution infrastructure, which is highly recommended.
-        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setApplicationContext(this.applicationContext);
-        
-        templateResolver.setPrefix("/WEB-INF/views/");
-        templateResolver.setSuffix(".html");
+    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
-        // HTML is the default value, added here for the sake of clarity.
-        templateResolver.setTemplateMode(TemplateMode.HTML);
-        // Template cache is true by default. Set to false if you want
-        // templates to be automatically updated when modified.
-        templateResolver.setCacheable(false);
-        return templateResolver;
+    @Autowired
+    private MySavedRequestAwareAuthenticationSuccessHandler mySuccessHandler;
+
+    private SimpleUrlAuthenticationFailureHandler myFailureHandler = new SimpleUrlAuthenticationFailureHandler("/error");
+
+    @Override
+    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("admin").password(encoder().encode("admin")).roles("ADMIN");
     }
 
     @Bean
-    public SpringTemplateEngine templateEngine() {
-        // SpringTemplateEngine automatically applies SpringStandardDialect and
-        // enables Spring's own MessageSource message resolution mechanisms.
-        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        templateEngine.setTemplateResolver(templateResolver());
-        templateEngine.addDialect(new LayoutDialect());
-        // Enabling the SpringEL compiler with Spring 4.2.4 or newer can
-        // speed up execution in most scenarios, but might be incompatible
-        // with specific cases when expressions in one template are reused
-        // across different data types, so this flag is "false" by default
-        // for safer backwards compatibility.
-        templateEngine.setEnableSpringELCompiler(true);
-        return templateEngine;
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public ThymeleafViewResolver viewResolver() {
-        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
-        viewResolver.setTemplateEngine(templateEngine());
-        // NOTE 'order' and 'viewNames' are optional
-        viewResolver.setOrder(1);
-        viewResolver.setViewNames(new String[]{".html", ".xhtml"});
-        return viewResolver;
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .cors()
+                .and()
+                .csrf().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(restAuthenticationEntryPoint)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/channel").hasRole("ADMIN")
+                .antMatchers("/channel/**").hasRole("ADMIN")
+                .antMatchers("/multimedium").hasRole("ADMIN")
+                .antMatchers("/multimedium/**").hasRole("ADMIN")
+                .and()
+                .formLogin()
+                .successHandler(mySuccessHandler)
+                .failureHandler(myFailureHandler)
+                .and()
+                .logout();
     }
 
-    // **********************************************
-    // ******* END OF THYMELEAF CONFIGURATION *******
-    // **********************************************
 }

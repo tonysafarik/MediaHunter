@@ -17,8 +17,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  *
  * @author Tony
  */
-@Controller
-@RequestMapping("/record")
+//@Controller
+//@RequestMapping("/record")
 public class RecordController {
 
     @Autowired

@@ -1,5 +1,6 @@
 import * as React from "react";
 import "../../../../../style/Request.css";
+import LoadingCircle from "../../../../fragment/LoadingCircle";
 
 interface Props {
     requestState: RequestState;
@@ -28,7 +29,7 @@ class Request extends React.Component<Props> {
             </span>
           ))}
         </div>
-        {this.props.requestState.done? <div className="done"> &#9989; </div> : <div className="loading" />}
+        {this.props.requestState.done? <div className="done"> &#10003; </div> : <LoadingCircle />}
       </div>
     );
   }

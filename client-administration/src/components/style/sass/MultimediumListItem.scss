@@ -1,0 +1,68 @@
+.MultimediumListItem {
+  display: flex;
+  height: 100px;
+  width: auto;
+  margin: 5px auto;
+  max-width: 800px;
+
+  &.not-registered {
+    filter: saturate(0);
+    background-color: #eee;
+
+    .thumbnail {
+      filter: contrast(0.7);
+    }
+  }
+
+  a,
+  a:hover,
+  a:active,
+  a:visited {
+    font-size: 17px;
+    text-decoration: none;
+    color: initial;
+    display: flex;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mcpName {
+    font-size: 10px;
+    color: #555;
+  }
+
+  .name {
+    font-size: 17px;
+  }
+
+  .thumbnail {
+    margin: 0 15px;
+    align-self: center;
+  }
+
+  .content {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    overflow: hidden;
+    margin-right: 30px;
+    width: 100%;
+
+    .names {
+      .flex {
+        display: flex;
+        flex-direction: column;
+
+        span {
+          overflow: hidden !important;
+          text-overflow: ellipsis;
+        }
+      }
+
+      white-space: nowrap;
+      overflow: hidden !important;
+      text-align: center;
+      flex-grow: 2;
+    }
+  }
+}

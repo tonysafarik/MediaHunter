@@ -2,13 +2,6 @@ import * as React from "react";
 import axios from "axios";
 import { RequestState } from "./content/template/header/requests/Request";
 import { RouteState } from "../App";
-import Home from "./content/Home";
-import Router from "react-router-dom";
-import FindChannelForm from "./content/search/channel/FindChannelForm";
-import FindForm from "./content/search/FindForm";
-import RecordList from "./content/search/record/RecordList";
-import Login from "./content/Login";
-import Channel from "./content/Channel";
 
 const apiClient = axios.create({
   baseURL: "http://192.168.1.105:4040"
@@ -16,15 +9,36 @@ const apiClient = axios.create({
 
 const BackendApi = {
   channel: {
-    getChannelPreviewByExternalId(externalId: string) {
+    getPreviewsByExternalId(externalId: string) {
       return apiClient.get("/channel/search/" + externalId);
     },
-    getChannelByExternalId(externalId: string) {
-      return null;
+    getById(id: string) {
+      return apiClient.get("/channel/" + id);
     },
-    registerChannel(externalId: string, mcpName: string, trusted: boolean) {
+    register(externalId: string, mcpName: string, trusted: boolean) {
       const obj = { externalId, mcpName, trusted };
       return apiClient.post("/channel", obj);
+    }
+  },
+  multimedium: {
+    getPreviewsByExternalId(externalId: string) {
+      return apiClient.get("/multimedium/search/" + externalId);
+    },
+    register(externalId: string, mcpName: string) {
+      const obj = {externalId, mcpName}
+      return apiClient.post("/multimedium", obj)
+    },
+    getById(id: string) {
+      return apiClient.get("/multimedium/" + id);
+    },
+    getQueue() {
+      return apiClient.get("/multimedium/queue");
+    },
+    accept(id: string) {
+      return apiClient.get("multimedium/accept/" + id);
+    },
+    reject(id:string) {
+      return apiClient.get("multimedium/reject/" + id);
     }
   }
 };

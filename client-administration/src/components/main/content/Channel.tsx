@@ -1,56 +1,60 @@
 import * as React from "react";
 import TrustedBadge from "../fragment/TrustedBadge";
-import { Redirect } from "react-router-dom";
+import {Redirect, RouteComponentProps} from "react-router-dom";
+import "../../style/Channel.css";
+import {ChannelDataObject} from "../data-object/ChannelDataObject";
+import BackendApi from "../MediaHunterApi";
+import LoadingCircle from "../fragment/LoadingCircle";
 
-interface Props {
-  info?: ChannelInfoDTO;
+interface Props extends RouteComponentProps<{ eid: string }> {
+    info?: ChannelDataObject;
 }
 
 interface State {
-  redirect: boolean;
-}
-
-export interface ChannelInfoDTO {
-  id?: string;
-  externalId: string;
-  mcpName: string;
-  name: string;
-  uri: string;
-  recordCount?: BigInt;
-  acceptedRecordCount?: BigInt;
-  lastRecordUpload?: Date;
-  trusted?: boolean;
+    channel?: ChannelDataObject;
 }
 
 class Channel extends React.Component<Props, State> {
-  state = {
-    redirect: false
-  };
 
-  render() {
-    if (this.state.redirect) {
-      return <Redirect to="/channels/search" />;
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            channel: undefined
+        }
     }
-    return (
-        <div className="Channel">
-          <a href="#" target="_blank" rel="noreferrer nofollow">
-            <span className="ItemName">Channel name</span>
-          </a>
-          <span className="McpName">Name of MCP</span>
-          <div className="EntityDetail">
-            <span>External ID: somesample</span>
-            <span>Accepted Record Count: x/X </span>
-            <span>Last record upload time: </span>
-          </div>
-          <TrustedBadge />
-        </div>
-    );
-  }
 
-  closeChannelInfo() {
-    const redirect: boolean = true;
-    this.setState({ redirect });
-  }
+    async componentDidMount() {
+        let response = await BackendApi.channel.getById(this.props.match.params.eid);
+        let state = {...this.state};
+        state.channel = response.data;
+        this.setState(state);
+    }
+
+    render() {
+        if (this.state.channel === undefined) {
+            return (
+                <div className="ChannelBackground">
+                    <LoadingCircle/>
+                </div>);
+        }
+        let channel = this.state.channel;
+        return (
+            <div className="ChannelBackground">
+                <div className="Channel">
+                    <a href={channel.uri} target="_blank" rel="noreferrer nofollow">
+                        <span className="ItemName">{channel.name}</span>
+                    </a>
+                    <span className="McpName">{channel.mcpName}</span>
+                    <div className="EntityDetail">
+                        <span>External ID: {channel.externalId}</span>
+                        <span>Accepted Record Count: {channel.acceptedRecordCount}/{channel.recordCount}</span>
+                        <span>Last record upload time: {channel.lastRecordUpload}</span>
+                    </div>
+                    {channel.trusted? <TrustedBadge /> : <></>}
+                </div>
+            </div>
+        );
+    }
 }
 
 export default Channel;

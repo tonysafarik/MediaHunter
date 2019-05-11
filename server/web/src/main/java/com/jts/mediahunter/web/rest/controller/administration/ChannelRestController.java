@@ -23,7 +23,6 @@ public class ChannelRestController {
 
     @GetMapping("/search/{channelId}")
     public List<FindChannelDTO> listChannelsByExternalId(@PathVariable(name = "channelId") String channelId) {
-        log.info("Requested channel: " + channelId);
         List<FindChannelDTO> channels = admin.getChannelsByExternalId(channelId);
         return channels;
     }
@@ -34,7 +33,7 @@ public class ChannelRestController {
         if (channel == null) {
             return new ResponseEntity(HttpStatus.PROCESSING);
         }
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity<>(channel.getId(),HttpStatus.CREATED);
     }
 
     @GetMapping("/{channelId}")
@@ -43,14 +42,14 @@ public class ChannelRestController {
         return channel;
     }
 
-    @GetMapping("/update/{channelId}")
+    //@GetMapping("/update/{channelId}")
     public ChannelInfoDTO updateChannel(@PathVariable String internalId) {
         admin.updateChannel(internalId);
         // TODO
         return null;
     }
 
-    @DeleteMapping("/delete/{channelId}")
+    //@DeleteMapping("/delete/{channelId}")
     public void deleteChannel(@PathVariable String internalId) {
         // TODO
         admin.deleteChannel(internalId, true);

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import "../../style/TrustedBadge.css";
 
 class TrustedBadge extends React.Component {
     render() {

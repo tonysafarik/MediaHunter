@@ -9,9 +9,9 @@
     top: 83px;
     background-color: #eee;
     flex-direction: column;
-    transition: 1s ease-in-out;
 
     &.visible {
         display: flex;
+        border: 1px solid rgba(0,0,0,0.2);
     }
 }

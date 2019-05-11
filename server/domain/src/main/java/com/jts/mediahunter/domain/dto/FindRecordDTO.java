@@ -1,6 +1,8 @@
 package com.jts.mediahunter.domain.dto;
 
 import java.net.URI;
+
+import com.jts.mediahunter.domain.RecordStage;
 import lombok.Data;
 
 /**
@@ -19,5 +21,7 @@ public class FindRecordDTO {
     private URI uri;
     
     private String mcpName;
+
+    private RecordStage stage;
     
 }

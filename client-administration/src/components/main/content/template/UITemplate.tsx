@@ -3,32 +3,36 @@ import Header from './header/Header';
 import Menu from './Menu';
 
 interface Props {
-
 }
 
-class UITemplate extends React.Component<Props> {
-    state = {
-        menuVisibility: false
+interface State {
+    menuVisibility: boolean;
+}
+
+class UITemplate extends React.Component<Props, State> {
+
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            menuVisibility: false
+        };
+        this.handleMenuButtonClick = this.handleMenuButtonClick.bind(this);
     }
+
     render() {
         return (
             <React.Fragment>
-                <Header
-                    onMenuButtonClick={() => this.handleMenuButtonClick()}
-                    menuVisibility={this.state.menuVisibility}
-                />
-                <Menu
-                    visibility={this.state.menuVisibility}
-                    onMenuItemClick={() => this.handleMenuButtonClick()}
-                />
+                <Header menuVisibility={this.state.menuVisibility} onMenuButtonClick={this.handleMenuButtonClick}/>
+                <Menu visibility={this.state.menuVisibility} onMenuItemClick={this.handleMenuButtonClick}/>
                 {this.props.children}
             </React.Fragment>
         );
     }
 
     handleMenuButtonClick() {
-        const menuVisibility = !this.state.menuVisibility;
-        this.setState({ menuVisibility });
+        const state = {...this.state};
+        state.menuVisibility = !state.menuVisibility;
+        this.setState(state);
     }
 }
 

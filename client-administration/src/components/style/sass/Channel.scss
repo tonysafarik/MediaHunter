@@ -1,35 +1,26 @@
-.overlay {
-  position: fixed;
-  display: flex;
-  top: 0;
-  left: 0;
-  width: 100%;
+.ChannelBackground {
   height: 100%;
-  background-color: rgba(0,0,0,0.55);
-  justify-content: center;
-  align-items: center;
-  z-index: 0;
+  flex-direction: column;
+  display: flex;
+
+  .LoadingCircle {
+    margin: 20px auto;
+  }
+
 }
 
 .Channel {
-  padding: 40px;
+  padding: 30px 10px;
   display: flex;
   flex-wrap: wrap;
   flex-flow: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba(250,250,250,0.9);
-  z-index: 1;
-  max-width: 100%;
-
-  .HamburgerMenu {
-    margin: 0 0 15px 0;
-    align-self: flex-end;
-    .bar {
-      background-color: #555;
-    }
-
-  }
+  background-color: #FFF;
+  border: 1px solid rgba(0,0,0,0.1);
+  box-shadow: 0 3px 3px -1px rgba(0, 0, 0, 0.3);
+  width: 70%;
+  margin: 30px auto;
 
   a,
   a:visited,

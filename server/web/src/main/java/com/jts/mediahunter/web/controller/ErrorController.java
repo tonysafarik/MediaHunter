@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
  *
  * @author Tony
  */
-@Controller
+//@Controller
 public class ErrorController implements org.springframework.boot.web.servlet.error.ErrorController {
 
     @RequestMapping("/error")

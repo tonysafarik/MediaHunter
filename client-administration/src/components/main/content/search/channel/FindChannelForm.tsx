@@ -2,22 +2,23 @@ import * as React from "react";
 import FindForm from "../FindForm";
 import * as Router from "react-router-dom";
 import ChannelList from "./ChannelList";
-import axios from "axios";
-import { FindChannelDTO } from "./ChannelListItem";
-import BackendApi from "../../../MediaHunterApi";
+import {ChannelDataObject} from "../../../data-object/ChannelDataObject";
 
 interface FindChannelFormState {
-  info: FindChannelDTO[];
   eid: string;
   placeholder: string;
 }
 
 class FindChannelForm extends FindForm<FindChannelFormState> {
-  state: Readonly<FindChannelFormState> = {
-    info: [],
-    eid: "",
-    placeholder: "Channel Id"
-  };
+  constructor(props: Router.RouteComponentProps<any>) {
+    super(props);
+    this.state = {
+      eid: "",
+      placeholder: "Channel Id"
+    };
+    this.onSearchButtonClick = this.onSearchButtonClick.bind(this);
+  }
+
 
   renderRoute = (props: Router.RouteComponentProps<{ eid: string }>) => (
     <ChannelList {...props} />

@@ -1,9 +1,16 @@
 import * as React from 'react';
+import "../../style/StageBadge.css";
+import {Stage} from "../data-object/MultimediumDataObject";
 
-class StageBadge extends React.Component {
+interface Props {
+    stage: Stage;
+}
+
+class StageBadge extends React.Component<Props> {
     render() {
-        return (<div className="StageBadge">Rejected</div>);
+        return (<div className={"StageBadge " + this.props.stage.toString().toLowerCase()}>{this.props.stage}</div>);
     }
+
 }
 
 export default StageBadge;

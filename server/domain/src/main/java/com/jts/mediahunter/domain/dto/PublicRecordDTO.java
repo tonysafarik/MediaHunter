@@ -1,5 +1,6 @@
 package com.jts.mediahunter.domain.dto;
 
+import com.jts.mediahunter.domain.Thumbnail;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,7 +17,7 @@ public class PublicRecordDTO {
     private String name;
     private String mcpName;
     private URI uri;
-    //private Thumbnail thumbnail;
+    private Thumbnail thumbnail;
     private Timestamp uploadTime;
     private String description;
 
