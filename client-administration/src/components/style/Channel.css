@@ -1,0 +1,50 @@
+.ChannelBackground {
+  height: 100%;
+  flex-direction: column;
+  display: flex;
+}
+.ChannelBackground .LoadingCircle {
+  margin: 20px auto;
+}
+
+.Channel {
+  padding: 30px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #FFF;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 3px -1px rgba(0, 0, 0, 0.3);
+  width: 70%;
+  margin: 30px auto;
+}
+.Channel a,
+.Channel a:visited,
+.Channel a:hover,
+.Channel a:active {
+  text-decoration: none;
+  color: #222;
+  max-width: 100%;
+}
+.Channel .ItemName {
+  font-size: 2em;
+  line-height: 1em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+.Channel .McpName {
+  font-size: 10px;
+}
+.Channel .EntityDetail {
+  margin: 30px 0;
+  display: flex;
+  flex-flow: column;
+  max-width: 100%;
+}
+.Channel .EntityDetail span {
+  word-wrap: break-word;
+}

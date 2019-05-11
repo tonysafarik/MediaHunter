@@ -1,0 +1,58 @@
+.MultimediumListItem {
+  display: flex;
+  height: 100px;
+  width: auto;
+  margin: 5px auto;
+  max-width: 800px;
+}
+.MultimediumListItem.not-registered {
+  filter: saturate(0);
+  background-color: #eee;
+}
+.MultimediumListItem.not-registered .thumbnail {
+  filter: contrast(0.7);
+}
+.MultimediumListItem a,
+.MultimediumListItem a:hover,
+.MultimediumListItem a:active,
+.MultimediumListItem a:visited {
+  font-size: 17px;
+  text-decoration: none;
+  color: initial;
+  display: flex;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+.MultimediumListItem .mcpName {
+  font-size: 10px;
+  color: #555;
+}
+.MultimediumListItem .name {
+  font-size: 17px;
+}
+.MultimediumListItem .thumbnail {
+  margin: 0 15px;
+  align-self: center;
+}
+.MultimediumListItem .content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  overflow: hidden;
+  margin-right: 30px;
+  width: 100%;
+}
+.MultimediumListItem .content .names {
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-align: center;
+  flex-grow: 2;
+}
+.MultimediumListItem .content .names .flex {
+  display: flex;
+  flex-direction: column;
+}
+.MultimediumListItem .content .names .flex span {
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}

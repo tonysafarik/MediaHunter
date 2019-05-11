@@ -1,0 +1,44 @@
+.ChannelListItem {
+  display: flex;
+  height: 100px;
+  width: auto;
+  margin: 5px auto;
+  max-width: 800px;
+}
+.ChannelListItem.not-registered {
+  filter: saturate(0);
+  background-color: #eee;
+}
+.ChannelListItem.not-registered .logo {
+  filter: contrast(0.7);
+}
+.ChannelListItem a,
+.ChannelListItem a:hover,
+.ChannelListItem a:active,
+.ChannelListItem a:visited {
+  font-size: 17px;
+  text-decoration: none;
+  color: initial;
+  display: flex;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+.ChannelListItem .logo {
+  margin: 0 15px;
+  align-self: center;
+}
+.ChannelListItem .content {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  overflow: hidden;
+  margin-right: 30px;
+  width: 100%;
+}
+.ChannelListItem .content span {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden !important;
+  text-align: center;
+  flex-basis: 100%;
+}

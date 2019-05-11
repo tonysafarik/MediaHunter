@@ -1,0 +1,8 @@
+.PageNotFound {
+  font-size: 25px;
+  text-align: center;
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,0 +1,21 @@
+.ActiveRequests {
+  color: #555;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  z-index: 10;
+}
+.ActiveRequests .DropdownButton {
+  cursor: pointer;
+}
+.ActiveRequests .active {
+  color: #00B5EB;
+  animation: blinker 2s linear infinite;
+}
+@keyframes blinker {
+  50% {
+    color: #244655;
+  }
+}

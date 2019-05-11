@@ -1,0 +1,9 @@
+.LoadingCircle {
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top-color: #3498db;
+  width: 15px;
+  height: 15px;
+  animation: spin 1s linear infinite;
+  margin-right: 10%;
+}
