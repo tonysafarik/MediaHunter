@@ -6,8 +6,10 @@ import com.jts.mediahunter.domain.RecordStage;
 import com.jts.mediahunter.domain.dto.ChannelInfoDTO;
 import com.jts.mediahunter.domain.entities.Channel;
 import com.jts.mediahunter.domain.entities.Record;
+
 import java.util.List;
 import java.util.Objects;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -34,15 +36,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     public Channel putChannelToDB(Channel channel) {
-        Channel inserted = channelDAO.insert(channel);
-
-        if (inserted.getId() != null) {
-            log.info("Channel: " + channel.toString() + " inserted successfully.");
-        } else {
-            log.error("Channel: " + channel.toString() + " NOT inserted successfully");
-        }
-
-        return inserted;
+        Channel newChannel = channelDAO.insert(channel);
+        log.info("Inserted: {}", newChannel.toString());
+        return newChannel;
     }
 
     @Override
@@ -55,16 +51,9 @@ public class DatabaseServiceImpl implements DatabaseService {
         channelDAO.save(channel);
     }
 
-    private void checkAllRecordsDeleted(List<Record> records){
-        for (Record record :
-                records) {
-            log.error("Record with external ID: " + record.getExternalId() + " from " + record.getMcpName() + " was NOT deleted, but should be");
-        }
-    }
-
     @Override
     public void deleteChannel(String internalID, boolean deleteAllChannelRecords) {
-        Channel channel = channelDAO.findById(internalID).orElse(null);
+        Channel channel = getChannelById(internalID);
         if (channel == null) {
             log.error("Channel with ID: " + internalID + " not found");
             return;
@@ -72,7 +61,6 @@ public class DatabaseServiceImpl implements DatabaseService {
         if (deleteAllChannelRecords) {
             List<Record> records = recordDAO.findByUploader(channel.getExternalId(), channel.getMcpName());
             recordDAO.deleteAll(records);
-            checkAllRecordsDeleted(recordDAO.findByUploader(channel.getExternalId(), channel.getMcpName()));
         }
         channelDAO.delete(channel);
     }
@@ -86,13 +74,7 @@ public class DatabaseServiceImpl implements DatabaseService {
     public String putRecordToDB(Record record) {
         record.setStage(RecordStage.WAITING);
         Record inserted = recordDAO.insert(record);
-
-        if (inserted.getId() != null) {
-            log.info("Record: " + record.toString() + " inserted successfully.");
-        } else {
-            log.error("Record: " + record.toString() + " was NOT inserted successfully");
-        }
-
+        log.info("Inserted: {}", inserted.toString());
         return inserted.getId();
     }
 
@@ -108,10 +90,21 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     public void acceptRecord(Record record) {
-        //TODO record -> internalID, service can do it all!
-        getChannelsByExternalId(record.getUploaderExternalId());
+        if (record == null || record.getStage() == RecordStage.ACCEPTED) {
+            return;
+        }
+        String mcpName = record.getMcpName();
+        Channel channel = getChannelsByExternalId(record.getUploaderExternalId())
+                .stream()
+                .filter(ch -> ch.getMcpName().equals(mcpName))
+                .findAny()
+                .orElse(null);
         record.setStage(RecordStage.ACCEPTED);
         record = recordDAO.save(record);
+        if (channel != null) {
+            channel.registerNewAcceptedRecord(record);
+            updateChannel(channel);
+        }
         log.info("Record with ID: " + record.getId() + " was " + record.getStage().toString());
     }
 
@@ -132,10 +125,27 @@ public class DatabaseServiceImpl implements DatabaseService {
     }
 
     @Override
+    public List<Record> getMultimediaByUploaderExtednalId(String uploaderExternalId) {
+        return recordDAO.findByUploaderExternalId(uploaderExternalId);
+    }
+
+    @Override
     public void rejectRecord(Record record) {
-        //TODO record -> internalID, service can do it all!
+        if (record == null || record.getStage() == RecordStage.REJECTED) {
+            return;
+        }
         record.setStage(RecordStage.REJECTED);
         record = recordDAO.save(record);
+        String mcpName = record.getMcpName();
+        Channel channel = getChannelsByExternalId(record.getUploaderExternalId())
+                .stream()
+                .filter(ch -> ch.getMcpName().equals(mcpName))
+                .findAny()
+                .orElse(null);
+        if (channel != null) {
+            channel.acceptedRecordRejected();
+            updateChannel(channel);
+        }
         log.info("Record with ID: " + record.getId() + " was " + record.getStage().toString());
     }
 

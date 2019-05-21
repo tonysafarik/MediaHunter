@@ -29,6 +29,7 @@ public class ChannelRestController {
 
     @PostMapping
     public ResponseEntity putChannelToDB(@RequestBody PostChannelDTO channelInfo) {
+        log.info("INSERTING CHANNEL/se");
         ChannelInfoDTO channel = admin.putChannelToDB(channelInfo.getExternalId(), channelInfo.getMcpName(), channelInfo.isTrusted());
         if (channel == null) {
             return new ResponseEntity(HttpStatus.PROCESSING);

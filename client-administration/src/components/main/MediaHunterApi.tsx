@@ -2,12 +2,21 @@ import * as React from "react";
 import axios from "axios";
 import { RequestState } from "./content/template/header/requests/Request";
 import { RouteState } from "../App";
+import {getHeapSnapshot} from "v8";
 
 const apiClient = axios.create({
-  baseURL: "http://192.168.1.105:4040"
+  baseURL: "http://localhost:4040",
+  headers: (localStorage.getItem("token") !== null? {Authorization: { toString() {return `Basic ${localStorage.getItem('token')}`} }} : {})
 });
 
 const BackendApi = {
+  login: {
+    attempt(username: string, password: string) {
+      const headers = {headers: {"Authorization": "Basic " + btoa(username + ":" + password)}};
+      console.log(headers);
+      return apiClient.get("/login", headers);
+    }
+  },
   channel: {
     getPreviewsByExternalId(externalId: string) {
       return apiClient.get("/channel/search/" + externalId);
@@ -17,7 +26,9 @@ const BackendApi = {
     },
     register(externalId: string, mcpName: string, trusted: boolean) {
       const obj = { externalId, mcpName, trusted };
-      return apiClient.post("/channel", obj);
+      let promise = apiClient.post("/channel", obj);
+      console.log(promise);
+      return promise;
     }
   },
   multimedium: {
@@ -46,8 +57,7 @@ const BackendApi = {
 export const defaultRequestStorage: RequestStorage = {
   requests: [],
   addRequest: (request: RequestState) => {},
-  markDone: () => {},
-  routes: []
+  markDone: () => {}
 };
 
 export const AppContext = React.createContext(defaultRequestStorage);
@@ -56,7 +66,6 @@ export interface RequestStorage {
   requests: RequestState[];
   addRequest: (request: RequestState) => void;
   markDone: (request: RequestState) => void;
-  routes: RouteState[];
 }
 
 export default BackendApi;

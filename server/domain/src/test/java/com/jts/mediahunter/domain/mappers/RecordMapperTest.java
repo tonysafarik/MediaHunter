@@ -3,7 +3,7 @@ package com.jts.mediahunter.domain.mappers;
 import com.jts.mediahunter.domain.DomainConfiguration;
 import com.jts.mediahunter.domain.RecordStage;
 import com.jts.mediahunter.domain.Thumbnail;
-import com.jts.mediahunter.domain.dto.FindRecordDTO;
+import com.jts.mediahunter.domain.dto.MultimediumPreviewDTO;
 import com.jts.mediahunter.domain.dto.PublicRecordDTO;
 import com.jts.mediahunter.domain.dto.RecordInfoDTO;
 import com.jts.mediahunter.domain.entities.Record;
@@ -61,7 +61,7 @@ public class RecordMapperTest {
 
     @Test
     public void recordToFindRecordDTO(){
-        FindRecordDTO find = mapper.recordToFindRecordDTO(record);
+        MultimediumPreviewDTO find = mapper.recordToFindRecordDTO(record);
         assertThat(find).hasNoNullFieldsOrProperties();
     }
 

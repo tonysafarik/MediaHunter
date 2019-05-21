@@ -6,15 +6,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-//@CrossOrigin
-//@RestController
-//@RequestMapping("/error")
-//@Slf4j
-public class ErrorController {
+@CrossOrigin
+@RestController
+@RequestMapping
+@Slf4j
+public class LoginController {
 
-//    @GetMapping("/errorMessageHolder")
-//    public void handleError(){
-//        log.info("caught error");
-//    }
+    @GetMapping("/login")
+    public void handleError(){
+        log.info("logging");
+    }
 
 }

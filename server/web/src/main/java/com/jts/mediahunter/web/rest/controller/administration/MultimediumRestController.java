@@ -1,6 +1,6 @@
 package com.jts.mediahunter.web.rest.controller.administration;
 
-import com.jts.mediahunter.domain.dto.FindRecordDTO;
+import com.jts.mediahunter.domain.dto.MultimediumPreviewDTO;
 import com.jts.mediahunter.domain.dto.PostMultimediumDTO;
 import com.jts.mediahunter.domain.dto.RecordInfoDTO;
 import com.jts.mediahunter.web.facade.AdministrationFacade;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -24,8 +23,8 @@ public class MultimediumRestController {
     private AdministrationFacade admin;
 
     @GetMapping("/search/{multimediumId}")
-    public List<FindRecordDTO> listRecordsByExternalId(@PathVariable(name="multimediumId") String externalId) {
-        List<FindRecordDTO> multimedia = admin.getRecordsByExternalId(externalId);
+    public List<MultimediumPreviewDTO> listRecordsByExternalId(@PathVariable(name="multimediumId") String externalId) {
+        List<MultimediumPreviewDTO> multimedia = admin.getRecordsByExternalId(externalId);
         return multimedia;
     }
 
@@ -42,8 +41,8 @@ public class MultimediumRestController {
     }
 
     @GetMapping("/queue")
-    public List<FindRecordDTO> getWaitingRecords(){
-        List<FindRecordDTO> records = admin.getWaitingRecords();
+    public List<MultimediumPreviewDTO> getWaitingRecords(){
+        List<MultimediumPreviewDTO> records = admin.getWaitingRecords();
         return records;
     }
 

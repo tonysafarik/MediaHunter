@@ -2,13 +2,17 @@ package com.jts.mediahunter.web.facade;
 
 import com.jts.mediahunter.core.service.DatabaseService;
 import com.jts.mediahunter.core.service.PluginService;
+import com.jts.mediahunter.domain.RecordStage;
 import com.jts.mediahunter.domain.entities.Channel;
 import com.jts.mediahunter.domain.entities.Record;
 import com.jts.mediahunter.domain.dto.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import com.jts.mediahunter.domain.mappers.ChannelMapper;
 import com.jts.mediahunter.domain.mappers.RecordMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Component;
  * @author Tony
  */
 @Component
+@Slf4j
 public class AdministrationFacadeImpl implements AdministrationFacade {
 
     @Autowired
@@ -65,13 +70,33 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
             Channel channel = plugins.getChannelByExternalId(externalId, mcpName);
             channel.setTrusted(trusted);
             List<Record> records = plugins.getRecordsByUploaderExternalId(externalId, mcpName);
-            for (Record record : records) {
-                db.putRecordToDB(record);
-                if (trusted) {
-                    db.acceptRecord(record);
+            List<Record> recordsDB = db.getMultimediaByUploaderExtednalId(externalId)
+                    .stream()
+                    .filter(r -> r.getMcpName().equals(mcpName))
+                    .collect(Collectors.toList());
+
+            for (int i = 0; i < records.size(); i++) {
+                boolean removed = false;
+                for (int j = 0; j < recordsDB.size(); j++) {
+                    if (recordsDB.get(j).isSameAs(records.get(i))) {
+                        removed = true;
+                        if (trusted && recordsDB.get(j).getStage() != RecordStage.REJECTED) {
+                            db.acceptRecord(recordsDB.get(j));
+                        }
+                        channel.registerNewRecord(recordsDB.get(j));
+                        break;
+                    }
                 }
-                channel.registerNewRecord(record);
+                if (removed) {
+                    continue;
+                }
+                db.putRecordToDB(records.get(i));
+                if (trusted) {
+                    db.acceptRecord(records.get(i));
+                }
+                channel.registerNewRecord(records.get(i));
             }
+
             channel = db.putChannelToDB(channel);
             RequestStorage.removeFromChannelStorage(externalId, mcpName);
             return channelMapper.channelToChannelInfoDTO(channel);
@@ -100,16 +125,16 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
         db.deleteChannel(internalId, deleteAllChannelRecords);
     }
 
-    private FindRecordDTO recordToFindRecordDTO(Record record) {
+    private MultimediumPreviewDTO recordToFindRecordDTO(Record record) {
         return recordMapper.recordToFindRecordDTO(record);
     }
 
     @Override
-    public List<FindRecordDTO> getRecordsByExternalId(String externalId) {
+    public List<MultimediumPreviewDTO> getRecordsByExternalId(String externalId) {
         List<Record> dbRecords = db.getRecordsByExternalId(externalId);
         List<Record> pluginRecords = plugins.getRecordsByExternalId(externalId);
 
-        List<FindRecordDTO> foundRecords = new ArrayList<>();
+        List<MultimediumPreviewDTO> foundRecords = new ArrayList<>();
 
         for (int i = 0; i < dbRecords.size(); i++) {
             for (int j = 0; j < pluginRecords.size(); j++) {
@@ -162,9 +187,9 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
     }
 
     @Override
-    public List<FindRecordDTO> getWaitingRecords() {
+    public List<MultimediumPreviewDTO> getWaitingRecords() {
         List<Record> records = db.getWaitingRecords();
-        List<FindRecordDTO> found = new ArrayList<>();
+        List<MultimediumPreviewDTO> found = new ArrayList<>();
         for (Record record : records) {
             found.add(recordToFindRecordDTO(record));
         }

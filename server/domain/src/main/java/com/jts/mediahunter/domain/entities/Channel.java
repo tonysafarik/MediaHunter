@@ -99,6 +99,10 @@ public class Channel {
         this.acceptedRecordCount++;
     }
 
+    public void acceptedRecordRejected() {
+        this.acceptedRecordCount--;
+    }
+
     //TODO: accepted record -> rejected needs to decrement this.acceptedRecordCount
 
 }

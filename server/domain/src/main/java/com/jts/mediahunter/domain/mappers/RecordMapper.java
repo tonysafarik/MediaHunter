@@ -1,6 +1,6 @@
 package com.jts.mediahunter.domain.mappers;
 
-import com.jts.mediahunter.domain.dto.FindRecordDTO;
+import com.jts.mediahunter.domain.dto.MultimediumPreviewDTO;
 import com.jts.mediahunter.domain.dto.PublicRecordDTO;
 import com.jts.mediahunter.domain.dto.RecordInfoDTO;
 import com.jts.mediahunter.domain.entities.Record;
@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface RecordMapper {
 
-    FindRecordDTO recordToFindRecordDTO(Record record);
+    MultimediumPreviewDTO recordToFindRecordDTO(Record record);
 
     RecordInfoDTO recordToRecordInfoDTO(Record record);
 

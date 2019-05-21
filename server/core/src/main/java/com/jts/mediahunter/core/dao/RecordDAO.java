@@ -24,4 +24,6 @@ public interface RecordDAO extends MongoRepository<Record, String> {
     @Query(value = "{ 'stage' : 'ACCEPTED' }")
     public Page<Record> findAcceptedRecords(Pageable pageable);
 
+    public List<Record> findByUploaderExternalId(String uploaderExternalId);
+
 }

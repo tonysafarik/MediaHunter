@@ -39,4 +39,6 @@ public interface DatabaseService {
 
     public List<Record> getRecordPage(int page);
 
+    public List<Record> getMultimediaByUploaderExtednalId(String uploaderExternalId);
+
 }

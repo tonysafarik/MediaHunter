@@ -1,7 +1,6 @@
 package com.jts.mediahunter.web.facade;
 
 import com.jts.mediahunter.domain.dto.*;
-import com.jts.mediahunter.domain.entities.Channel;
 
 import java.util.List;
 
@@ -55,7 +54,7 @@ public interface AdministrationFacade {
      */
     public void deleteChannel(String internalId, boolean deleteAllChannelRecords);
 
-    public List<FindRecordDTO> getRecordsByExternalId(String externalId);
+    public List<MultimediumPreviewDTO> getRecordsByExternalId(String externalId);
     
     public String putRecordToDB(String externalId, String mcpName);
     
@@ -63,7 +62,7 @@ public interface AdministrationFacade {
     
     public void updateRecord(String internalId);
     
-    public List<FindRecordDTO> getWaitingRecords();
+    public List<MultimediumPreviewDTO> getWaitingRecords();
     
     public void acceptRecord(String internalId);
     

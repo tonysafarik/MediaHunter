@@ -6,7 +6,10 @@ import com.jts.mediahunter.plugins.MediaContentProviderPlugin;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,65 +20,48 @@ import org.springframework.stereotype.Component;
 @Component
 public class PluginServiceImpl implements PluginService {
 
+    private Map<String, MediaContentProviderPlugin> plugins;
+
     @Autowired
-    private List<MediaContentProviderPlugin> plugins;
+    public PluginServiceImpl(List<MediaContentProviderPlugin> plugins) {
+        this.plugins = new HashMap<>();
+        for (MediaContentProviderPlugin plugin: plugins) {
+            this.plugins.put(plugin.getMcpName(), plugin);
+        }
+    }
 
     @Override
     public List<Channel> getChannelsByExternalId(String externalId) {
         List<Channel> channels = new ArrayList<>();
-        for (MediaContentProviderPlugin plugin : plugins) {
-            channels.add(plugin.getChannelByExternalId(externalId));
-        }
+        this.plugins.forEach((key, value) -> channels.add(value.getChannelByExternalId(externalId)));
         return channels;
     }
 
     @Override
     public Channel getChannelByExternalId(String externalId, String nameOfMCP) {
-        for (MediaContentProviderPlugin plugin : plugins) {
-            if (plugin.getMcpName().equals(nameOfMCP)) {
-                return plugin.getChannelByExternalId(externalId);
-            }
-        }
-        return null;
+        return this.plugins.get(nameOfMCP).getChannelByExternalId(externalId);
     }
 
     @Override
     public List<Record> getRecordsByExternalId(String externalId) {
-        List<Record> records = new ArrayList<>();
-        for (MediaContentProviderPlugin plugin : plugins) {
-            records.add(plugin.getRecordByExternalId(externalId));
-        }
-        return records;
+        List<Record> multimedia = new ArrayList<>();
+        this.plugins.forEach((key, value) -> multimedia.add(value.getRecordByExternalId(externalId)));
+        return multimedia;
     }
 
     @Override
     public Record getRecordByExternalId(String externalId, String nameOfMCP) {
-        for (MediaContentProviderPlugin plugin : plugins) {
-            if (plugin.getMcpName().equals(nameOfMCP)) {
-                return plugin.getRecordByExternalId(externalId);
-            }
-        }
-        return null;
+        return this.plugins.get(nameOfMCP).getRecordByExternalId(externalId);
     }
 
     @Override
     public List<Record> getRecordsByUploaderExternalId(String externalId, String nameOfMCP) {
-        for (MediaContentProviderPlugin plugin : plugins) {
-            if (plugin.getMcpName().equals(nameOfMCP)) {
-                return plugin.getAllChannelRecords(externalId);
-            }
-        }
-        return new ArrayList<>();
+        return this.plugins.get(nameOfMCP).getAllChannelRecords(externalId);
     }
 
     @Override
     public List<Record> getRecordsByUploaderExternalId(String uploaderExternalId, String nameOfMCP, LocalDateTime from) {
-        for (MediaContentProviderPlugin plugin : plugins) {
-            if (plugin.getMcpName().equals(nameOfMCP)) {
-                return plugin.getNewRecords(uploaderExternalId, from);
-            }
-        }
-        return new ArrayList<>();
+        return this.plugins.get(nameOfMCP).getNewRecords(uploaderExternalId, from);
     }
 
 }

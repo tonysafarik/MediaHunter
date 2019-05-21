@@ -1,14 +1,12 @@
 package com.jts.mediahunter.web.controller;
 
-import com.jts.mediahunter.domain.dto.FindRecordDTO;
+import com.jts.mediahunter.domain.dto.MultimediumPreviewDTO;
 import com.jts.mediahunter.domain.dto.RecordInfoDTO;
 import com.jts.mediahunter.web.facade.AdministrationFacade;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -32,7 +30,7 @@ public class RecordController {
     @GetMapping("/list")
     public ModelAndView listRecordsByExternalId(@RequestParam(name = "externalId") String externalId) {
         ModelAndView mnv = new ModelAndView("/record/list");
-        List<FindRecordDTO> records = admin.getRecordsByExternalId(externalId);
+        List<MultimediumPreviewDTO> records = admin.getRecordsByExternalId(externalId);
         mnv.addObject("records", records);
         mnv.addObject("selectedRecord", records);
         return mnv;
@@ -54,7 +52,7 @@ public class RecordController {
     @GetMapping("/queue")
     public ModelAndView getWaitingRecords(){
         ModelAndView mnv = new ModelAndView("/record/queue");
-        List<FindRecordDTO> records = admin.getWaitingRecords();
+        List<MultimediumPreviewDTO> records = admin.getWaitingRecords();
         mnv.addObject("records", records);
         return mnv;
     }

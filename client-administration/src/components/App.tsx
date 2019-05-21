@@ -2,18 +2,16 @@ import * as React from "react";
 import * as Router from "react-router-dom";
 import Home from "./main/content/Home";
 import UITemplate from "./main/content/template/UITemplate";
-import FindForm from "./main/content/search/FindForm";
-import MultimediumList from "./main/content/search/multimedium/MultimediumList";
 import Login from "./main/content/Login";
-import PageNotFound from "./main/content/PageNotFound";
 import FindChannelForm from "./main/content/search/channel/FindChannelForm";
-import ChannelList from "./main/content/search/channel/ChannelList";
 import Channel from "./main/content/Channel";
 import {RequestState} from "./main/content/template/header/requests/Request";
 import {AppContext, RequestStorage} from "./main/MediaHunterApi";
 import FindMultimediumForm from "./main/content/search/multimedium/FindMultimediumForm";
 import Multimedium from "./main/content/Multimedium";
 import QueueList from "./main/content/QueueList";
+import PrivateComponent from "./PrivateComponent";
+import {RouteComponentProps} from "react-router-dom";
 
 export interface RouteState {
     key: string;
@@ -23,10 +21,6 @@ export interface RouteState {
 }
 
 interface Props {
-}
-
-interface State {
-    routes: RouteState[];
 }
 
 class MediaHunterApp extends React.Component<Props, RequestStorage> {
@@ -46,53 +40,7 @@ class MediaHunterApp extends React.Component<Props, RequestStorage> {
                     newRequest.done = true;
                 }
                 this.setState(state);
-            },
-            routes: [
-                {
-                    key: "Home",
-                    exact: true,
-                    path: "/(|home)",
-                    render: () => <Home/>
-                },
-                {
-                    key: "Channel Search",
-                    exact: false,
-                    path: "/search/channel",
-                    render: (props: Router.RouteComponentProps) => (
-                        <FindChannelForm {...props} />
-                    )
-                },
-                {
-                    key: "MultiMedium Search",
-                    exact: false,
-                    path: "/search/multimedium",
-                    render: (props: Router.RouteComponentProps) => <FindMultimediumForm {...props} />
-                },
-                {
-                    key: "Record Queue",
-                    exact: true,
-                    path: "/queue",
-                    render: (props: Router.RouteComponentProps<any>) => <QueueList {...props}/>
-                },
-                {
-                    key: "Login",
-                    exact: true,
-                    path: "/login",
-                    render: () => <Login/>
-                },
-                {
-                    key: "Channel",
-                    exact: false,
-                    path: "/channel/:eid",
-                    render: (props: Router.RouteComponentProps<any>) => <Channel {...props} />
-                },
-                {
-                    key: "Multimedium",
-                    exact: false,
-                    path: "/multimedium/:eid",
-                    render: (props: Router.RouteComponentProps<any>) => <Multimedium {...props} />
-                }
-            ]
+            }
         };
     }
 
@@ -100,13 +48,10 @@ class MediaHunterApp extends React.Component<Props, RequestStorage> {
         return (
             <Router.BrowserRouter>
                 <AppContext.Provider value={this.state}>
-                    <UITemplate>
-                        <Router.Switch>
-                            {this.state.routes.map(route => (
-                                <Router.Route {...route} />
-                            ))}
-                        </Router.Switch>
-                    </UITemplate>
+                    <Router.Switch>
+                        <Router.Route exact path="/login" render={(props: RouteComponentProps) => <Login {...props}/>}/>
+                        <Router.Route path="/" render={() => <PrivateComponent/>}/>
+                    </Router.Switch>
                 </AppContext.Provider>
             </Router.BrowserRouter>
         );

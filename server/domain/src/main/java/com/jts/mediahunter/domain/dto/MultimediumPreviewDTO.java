@@ -10,7 +10,7 @@ import lombok.Data;
  * @author Tony
  */
 @Data
-public class FindRecordDTO {
+public class MultimediumPreviewDTO {
     
     private String id;
     
