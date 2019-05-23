@@ -5,7 +5,7 @@ import { RouteState } from "../App";
 import {getHeapSnapshot} from "v8";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:4040",
+  baseURL: process.env.REACT_APP_BACKEND_URL,
   headers: (localStorage.getItem("token") !== null? {Authorization: { toString() {return `Basic ${localStorage.getItem('token')}`} }} : {})
 });
 

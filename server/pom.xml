@@ -43,9 +43,9 @@
     </dependencies>
 
     <modules>
-        <module>core</module>
-        <module>domain</module>
+        <module>database</module>
+        <module>data-model</module>
         <module>plugins</module>
-        <module>web</module>
+        <module>core</module>
     </modules>
 </project>

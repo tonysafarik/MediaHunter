@@ -1,0 +1,19 @@
+.Home {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin: 0 auto;
+  align-items: center;
+}
+.Home .ButtonLink {
+  width: 60%;
+  height: 60px;
+  line-height: 60px;
+  border: 1px solid #5FABDE;
+  border-bottom: 3px solid #3D89BC;
+  color: white;
+  background-color: #5FABDE;
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.18);
+}

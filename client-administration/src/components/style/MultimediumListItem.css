@@ -33,6 +33,8 @@
 .MultimediumListItem .thumbnail {
   margin: 0 15px;
   align-self: center;
+  height: 64px;
+  width: 64px;
 }
 .MultimediumListItem .content {
   display: flex;

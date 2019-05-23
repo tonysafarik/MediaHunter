@@ -29,12 +29,18 @@ class RequestList extends React.Component<RequestListProps, RequestListState> {
                                 <span>Nothing to see here. Move on.</span>
                             );
                         }
-                        return appState.requests.map(request => (
-                            <Request
-                                requestState={request}
-                                key={request.content.get(Array.from(request.content.keys())[0])}
-                            />
-                        ));
+                        return appState.requests.map(request => {
+                            let key = Array.from(request.content.keys()).find((key) => key == "EID");
+                            if (key === undefined) {
+                                key = request.content.get(Array.from(request.content.keys())[1]);
+                            } else {
+                                key = request.content.get(key);
+                            }
+                            return (
+                                <Request
+                                    requestState={request}
+                                    key={key}/>);
+                        });
                     }}
                 </AppContext.Consumer>
             </div>

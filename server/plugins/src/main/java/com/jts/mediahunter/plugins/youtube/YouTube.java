@@ -53,7 +53,7 @@ public class YouTube implements MediaContentProviderPlugin {
         log.info(uri.toString());
         YouTubeChannelList channelList = rest.getForObject(uri, YouTubeChannelList.class);
 
-        if (channelList != null) {
+        if (channelList != null && channelList.getChannels().size() == 1) {
             YouTubeChannel channel = channelList.getChannels().get(0);
             return Channel.builder()
                     .externalId(channel.getExternalId())
@@ -90,7 +90,7 @@ public class YouTube implements MediaContentProviderPlugin {
 
         YouTubeRecordList videoList = rest.getForObject(uri, YouTubeRecordList.class);
 
-        if (videoList != null) {
+        if (videoList != null && videoList.getRecords().size() == 1) {
             return youTubeRecordToRecord(videoList.getRecords().get(0));
         }
 

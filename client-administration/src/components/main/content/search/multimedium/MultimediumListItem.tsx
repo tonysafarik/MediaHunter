@@ -1,5 +1,5 @@
 import * as React from 'react';
-import YtThumbnail from '../../../../img/youtube_social_square_red.png';
+import multimediaThumbnail from '../../../../img/rectangle.jpg';
 import StageBadge from '../../../fragment/StageBadge';
 import {Link} from 'react-router-dom';
 import "../../../../style/MultimediumListItem.css";
@@ -20,7 +20,7 @@ class MultimediumListItem extends React.Component<Props> {
         return (
             <div className={"MultimediumListItem" + this.notRegisteredClassName()}>
                 <Link onClick={() => this.props.onClick()} to={this.getItemLinkPath()}>
-                    <img className="thumbnail" src={YtThumbnail}/>
+                    <img className="thumbnail" src={multimediaThumbnail}/>
                     <div className="content">
                         <div className="names">
                             <div className="flex">

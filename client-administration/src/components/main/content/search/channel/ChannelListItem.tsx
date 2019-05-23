@@ -1,5 +1,5 @@
 import * as React from "react";
-import YTLogo from "../../../../img/youtube_social_circle_red.png";
+import channelThumbnail from "../../../../img/circle.png";
 import TrustedBadge from "../../../fragment/TrustedBadge";
 import {Link} from "react-router-dom";
 import "../../../../style/ChannelListItem.css";
@@ -20,7 +20,7 @@ class ChannelListItem extends React.Component<Props> {
         return (
             <div className={"ChannelListItem" + this.notRegisteredClassName()}>
                 <Link onClick={() => this.props.onClick()} to={this.getItemLinkPath()}>
-                    <img className="logo" src={YTLogo}/>
+                    <img className="logo" src={channelThumbnail}/>
                     <div className="content">
                         <span className="name">{this.props.channelInfo.name}</span>
                         {this.props.channelInfo.trusted ? <TrustedBadge/> : null}

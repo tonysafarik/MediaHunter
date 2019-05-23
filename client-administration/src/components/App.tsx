@@ -1,16 +1,9 @@
 import * as React from "react";
 import * as Router from "react-router-dom";
-import Home from "./main/content/Home";
-import UITemplate from "./main/content/template/UITemplate";
 import Login from "./main/content/Login";
-import FindChannelForm from "./main/content/search/channel/FindChannelForm";
-import Channel from "./main/content/Channel";
 import {RequestState} from "./main/content/template/header/requests/Request";
 import {AppContext, RequestStorage} from "./main/MediaHunterApi";
-import FindMultimediumForm from "./main/content/search/multimedium/FindMultimediumForm";
-import Multimedium from "./main/content/Multimedium";
-import QueueList from "./main/content/QueueList";
-import PrivateComponent from "./PrivateComponent";
+import PrivateComponent from "./main/PrivateComponent";
 import {RouteComponentProps} from "react-router-dom";
 
 export interface RouteState {
@@ -36,7 +29,7 @@ class MediaHunterApp extends React.Component<Props, RequestStorage> {
             markDone: (request: RequestState) => {
                 let state = {...this.state};
                 let newRequest = state.requests.find(oldRequest => request === oldRequest);
-                if (newRequest != undefined) {
+                if (newRequest !== undefined) {
                     newRequest.done = true;
                 }
                 this.setState(state);

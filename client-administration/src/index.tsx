@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import MediaHunterApp from "./components/App";
-import * as Router from "react-router-dom";
 
 ReactDOM.render(<MediaHunterApp/>, document.getElementById("root"));
 
