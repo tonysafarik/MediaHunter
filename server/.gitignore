@@ -24,9 +24,9 @@
 /nbdist/
 /.nb-gradle/
 /core/target/
-/domain/target/
+/data-model/target/
 /plugins/target/
-/web/target/
+/database/target/
 /plugins/src/main/resources/secret.properties
 README.html
 /core/nbproject/
