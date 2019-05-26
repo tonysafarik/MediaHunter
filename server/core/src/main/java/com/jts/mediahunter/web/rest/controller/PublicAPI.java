@@ -21,14 +21,12 @@ public class PublicAPI {
     @GetMapping("/records/{page}")
     public List<PublicMultimediumDTO> pageOfMultimedia(@PathVariable("page") int page){
         List<PublicMultimediumDTO> multimedia = admin.getMultimediaPage(page);
-        log.info(multimedia.toString());
         return multimedia;
 
     }
 
     @GetMapping("/channels")
     public List<PublicChannelDTO> listAllTrustedChannels() {
-        log.info("called");
         return admin.getTrustedChannels();
     }
 
