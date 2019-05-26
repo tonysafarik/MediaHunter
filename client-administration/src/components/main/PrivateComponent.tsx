@@ -67,7 +67,6 @@ class PrivateComponent extends React.Component<Props, State> {
     }
 
     render() {
-        console.log(localStorage.getItem("token"));
         if (localStorage.getItem("token") === null) {
             return (<Redirect to="/login"/>)
         }

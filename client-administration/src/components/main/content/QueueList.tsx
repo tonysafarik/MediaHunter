@@ -27,7 +27,6 @@ class QueueList extends React.Component<Props, State> {
         let response = await BackendApi.multimedium.getQueue();
         let state = {...this.state};
         state.multimedia = response.data;
-        console.log("response that i got", response);
         this.setState(state);
     }
 

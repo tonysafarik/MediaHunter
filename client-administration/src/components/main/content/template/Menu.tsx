@@ -30,7 +30,7 @@ class Menu extends React.Component<Props, State> {
                     path: "/search/multimedium"
                 },
                 {
-                    name: "Record Queue",
+                    name: "Multimedium Queue",
                     path: "/queue"
                 }
             ]
