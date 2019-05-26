@@ -1,12 +1,12 @@
 package com.jts.mediahunter.plugins.youtube;
 
 import com.jts.mediahunter.domain.entities.Channel;
-import com.jts.mediahunter.domain.entities.Record;
+import com.jts.mediahunter.domain.entities.Multimedium;
 import com.jts.mediahunter.plugins.MediaContentProviderPlugin;
 import com.jts.mediahunter.plugins.youtube.dto.YouTubeChannel;
 import com.jts.mediahunter.plugins.youtube.dto.YouTubeChannelList;
-import com.jts.mediahunter.plugins.youtube.dto.YouTubeRecord;
-import com.jts.mediahunter.plugins.youtube.dto.YouTubeRecordList;
+import com.jts.mediahunter.plugins.youtube.dto.YouTubeVideo;
+import com.jts.mediahunter.plugins.youtube.dto.YouTubeVideoList;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -83,15 +83,15 @@ public class YouTube implements MediaContentProviderPlugin {
     }
 
     @Override
-    public Record getRecordByExternalId(String recordId) {
-        String[] parameters = {"part", "snippet", "id", recordId, "key", API_KEY};
+    public Multimedium getMultimediumByExternalId(String multimediumExternalID) {
+        String[] parameters = {"part", "snippet", "id", multimediumExternalID, "key", API_KEY};
 
         URI uri = buildURIForHTTPRequest("/videos", parameters);
 
-        YouTubeRecordList videoList = rest.getForObject(uri, YouTubeRecordList.class);
+        YouTubeVideoList videoList = rest.getForObject(uri, YouTubeVideoList.class);
 
-        if (videoList != null && videoList.getRecords().size() == 1) {
-            return youTubeRecordToRecord(videoList.getRecords().get(0));
+        if (videoList != null && videoList.getVideos().size() == 1) {
+            return youTubeVideoToMultimedium(videoList.getVideos().get(0));
         }
 
         return null;
@@ -102,21 +102,21 @@ public class YouTube implements MediaContentProviderPlugin {
         return this.SERVICE_NAME;
     }
 
-    private Record youTubeRecordToRecord(YouTubeRecord record) {
-        return Record.builder()
-                .description(record.getDescription())
-                .externalId(record.getVideoId())
+    private Multimedium youTubeVideoToMultimedium(YouTubeVideo multimedium) {
+        return Multimedium.builder()
+                .description(multimedium.getDescription())
+                .externalId(multimedium.getVideoId())
                 .mcpName(this.SERVICE_NAME)
-                .name(record.getName())
-                .thumbnail(record.getThumbnail())
-                .uploadTime(record.getUploadTime())
-                .uploaderExternalId(record.getUploaderExternalId())
-                .uri(record.getURI())
+                .name(multimedium.getName())
+                .thumbnail(multimedium.getThumbnail())
+                .uploadTime(multimedium.getUploadTime())
+                .uploaderExternalId(multimedium.getUploaderExternalId())
+                .uri(multimedium.getURI())
                 .build();
     }
 
     @Override
-    public List<Record> getAllChannelRecords(String channelId) {
+    public List<Multimedium> getAllChannelMultimedia(String channelId) {
         String playListId = getChannelsUploadListId(channelId);
 
         if (playListId == null) {
@@ -127,16 +127,16 @@ public class YouTube implements MediaContentProviderPlugin {
 
         URI uri = buildURIForHTTPRequest("/playlistItems", parameters);
 
-        YouTubeRecordList videoList = rest.getForObject(uri, YouTubeRecordList.class);
+        YouTubeVideoList videoList = rest.getForObject(uri, YouTubeVideoList.class);
 
-        List<Record> videos = new ArrayList<>();
+        List<Multimedium> videos = new ArrayList<>();
 
         if (videoList == null) {
             return videos;
         }
 
-        for (YouTubeRecord record : videoList.getRecords()) {
-            videos.add(youTubeRecordToRecord(record));
+        for (YouTubeVideo video : videoList.getVideos()) {
+            videos.add(youTubeVideoToMultimedium(video));
         }
         if (videoList.getNextPageTogen() != null) {
             parameters = Arrays.copyOf(parameters, parameters.length + 2);
@@ -147,10 +147,10 @@ public class YouTube implements MediaContentProviderPlugin {
 
             uri = buildURIForHTTPRequest("/playlistItems", parameters);
 
-            videoList = rest.getForObject(uri, YouTubeRecordList.class);
+            videoList = rest.getForObject(uri, YouTubeVideoList.class);
             if (videoList != null) {
-                for (YouTubeRecord record : videoList.getRecords()) {
-                    videos.add(youTubeRecordToRecord(record));
+                for (YouTubeVideo video : videoList.getVideos()) {
+                    videos.add(youTubeVideoToMultimedium(video));
                 }
             }
         }
@@ -176,7 +176,7 @@ public class YouTube implements MediaContentProviderPlugin {
     }
 
     @Override
-    public List<Record> getNewRecords(String channelId, LocalDateTime oldestRecord) {
+    public List<Multimedium> getNewMultimedia(String channelId, LocalDateTime oldestMultimedium) {
         String playListId = getChannelsUploadListId(channelId);
 
         if (playListId == null) {
@@ -187,17 +187,17 @@ public class YouTube implements MediaContentProviderPlugin {
 
         URI uri = buildURIForHTTPRequest("/playlistItems", parameters);
 
-        YouTubeRecordList videoList = rest.getForObject(uri, YouTubeRecordList.class);
+        YouTubeVideoList videoList = rest.getForObject(uri, YouTubeVideoList.class);
 
-        List<Record> videos = new ArrayList<>();
+        List<Multimedium> videos = new ArrayList<>();
 
         if (videoList == null) {
             return videos;
         }
 
-        for (YouTubeRecord record : videoList.getRecords()) {
-            if (record.getUploadTime().isAfter(oldestRecord)) {
-                videos.add(youTubeRecordToRecord(record));
+        for (YouTubeVideo video : videoList.getVideos()) {
+            if (video.getUploadTime().isAfter(oldestMultimedium)) {
+                videos.add(youTubeVideoToMultimedium(video));
                 continue;
             }
             return videos;
@@ -211,11 +211,11 @@ public class YouTube implements MediaContentProviderPlugin {
 
             uri = buildURIForHTTPRequest("/playlistItems", parameters);
 
-            videoList = rest.getForObject(uri, YouTubeRecordList.class);
+            videoList = rest.getForObject(uri, YouTubeVideoList.class);
             if (videoList != null) {
-                for (YouTubeRecord record : videoList.getRecords()) {
-                    if (record.getUploadTime().isAfter(oldestRecord)) {
-                        videos.add(youTubeRecordToRecord(record));
+                for (YouTubeVideo video : videoList.getVideos()) {
+                    if (video.getUploadTime().isAfter(oldestMultimedium)) {
+                        videos.add(youTubeVideoToMultimedium(video));
                         continue;
                     }
                     return videos;

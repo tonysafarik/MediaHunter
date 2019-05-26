@@ -10,7 +10,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class FindChannelDTO {
+public class ChannelPreviewDTO {
     
     private String id;
     

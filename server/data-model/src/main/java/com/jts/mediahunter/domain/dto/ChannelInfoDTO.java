@@ -18,9 +18,9 @@ public class ChannelInfoDTO {
     private String mcpName;
     private String name;
     private URI uri;
-    private long recordCount;
-    private long acceptedRecordCount;
-    private LocalDateTime lastRecordUpload;
+    private long multimediumCount;
+    private long acceptedMultimediumCount;
+    private LocalDateTime lastMultimediumUpload;
     private boolean trusted;
     
 }

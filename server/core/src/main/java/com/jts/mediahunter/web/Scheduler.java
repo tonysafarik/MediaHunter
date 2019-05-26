@@ -14,8 +14,8 @@ public class Scheduler {
     private AdministrationFacade admin;
 
     @Scheduled(fixedDelay = 90000, initialDelay = 120000)
-    private void checkForNewRecords(){
-        log.info("running scheduled task to find all new media");
+    private void checkForNewMultimedia(){
+        log.info("Scheduled task to find new multimedia");
         admin.addAllNewMedia();
     }
 

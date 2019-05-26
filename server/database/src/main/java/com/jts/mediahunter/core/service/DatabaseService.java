@@ -1,8 +1,7 @@
 package com.jts.mediahunter.core.service;
 
-import com.jts.mediahunter.domain.dto.ChannelInfoDTO;
 import com.jts.mediahunter.domain.entities.Channel;
-import com.jts.mediahunter.domain.entities.Record;
+import com.jts.mediahunter.domain.entities.Multimedium;
 
 import java.util.List;
 
@@ -19,27 +18,27 @@ public interface DatabaseService {
 
     public void updateChannel(Channel channel);
 
-    public void deleteChannel(String internalID, boolean deleteAllChannelRecords);
+    public void deleteChannel(String internalID, boolean deleteAllChannelMultimedia);
 
-    public List<Record> getRecordsByExternalId(String externalId);
+    public List<Multimedium> getMultimediaByExternalId(String externalId);
 
-    public String putRecordToDB(Record record);
+    public String putMultimediumToDB(Multimedium multimedium);
 
-    public Record getRecordById(String internalId);
+    public Multimedium getMultimediumById(String internalId);
 
-    public void updateRecord(Record record);
+    public void updateMultimedium(Multimedium multimedium);
 
-    public void acceptRecord(Record record);
+    public void acceptMultimedium(Multimedium multimedium);
 
-    public void rejectRecord(Record record);
+    public void rejectMultimedium(Multimedium multimedium);
 
-    public List<Record> getWaitingRecords();
+    public List<Multimedium> getWaitingMultimedia();
 
     public List<Channel> getAllChannels();
 
-    public List<Record> getRecordPage(int page);
+    public List<Multimedium> getMultimediaPage(int page);
 
-    public List<Record> getMultimediaByUploaderExtednalId(String uploaderExternalId);
+    public List<Multimedium> getMultimediaByUploaderExtednalId(String uploaderExternalId);
 
     public List<Channel> getTrustedChannels();
 }

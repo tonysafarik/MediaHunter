@@ -13,14 +13,14 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * Entity for every Record of a Channel (Record can be video, audio, ...)
+ * Entity for every Multimedium of a Channel (Multimedium can be video, audio, ...)
  *
  * @author Tony
  */
 @Data
 @Builder
 @Document
-public class Record {
+public class Multimedium {
 
     /**
      * Internal ID
@@ -51,7 +51,7 @@ public class Record {
     private String mcpName;
 
     /**
-     * URI of the record
+     * URI of the multimedium
      */
     @NonNull
     private URI uri;
@@ -62,14 +62,14 @@ public class Record {
     private Thumbnail thumbnail;
 
     /**
-     * date and time of upload of the record (used for sorting)
+     * date and time of upload of the multimedium (used for sorting)
      */
     @NonNull
     @Indexed(direction = IndexDirection.DESCENDING, name = "uploadTime")
     private LocalDateTime uploadTime;
 
     /**
-     * Description pulled from the record information, can be null
+     * Description pulled from the multimedium information, can be null
      */
     private String description;
 
@@ -79,15 +79,15 @@ public class Record {
     private RecordStage stage = RecordStage.UNKNOWN;
     
     /**
-     * Check if record is the same as this object (only using external ID and
-     * name of MCP). Record from DB and from Plugin can be the same (even though
-     * Record entity from Plugin doesn't have it's internal ID set).
+     * Check if multimedium is the same as this object (only using external ID and
+     * name of MCP). Multimedium from DB and from Plugin can be the same (even though
+     * Multimedium entity from Plugin doesn't have it's internal ID set).
      *
-     * @param record
+     * @param multimedium
      * @return
      */
-    public boolean isSameAs(Record record) {
-        return record.getExternalId().equals(this.externalId) && record.getMcpName().equals(this.mcpName);
+    public boolean isSameAs(Multimedium multimedium) {
+        return multimedium.getExternalId().equals(this.externalId) && multimedium.getMcpName().equals(this.mcpName);
     }
 
 }

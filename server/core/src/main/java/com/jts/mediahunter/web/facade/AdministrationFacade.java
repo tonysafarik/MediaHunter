@@ -17,14 +17,14 @@ public interface AdministrationFacade {
      * @param externalId ID provided by MCP
      * @return
      */
-    public List<FindChannelDTO> getChannelsByExternalId(String externalId);
+    public List<ChannelPreviewDTO> getChannelsByExternalId(String externalId);
 
     /**
      * Puts new channel to database.
      *
      * @param externalId ID provided by Media Content Provider (MCP)
      * @param mcpName name of MCP - used for decision which plugin to use
-     * @param trusted wether channel records should go straight to accepted stage
+     * @param trusted wether channel multimedia should go straight to accepted stage
      * @return ID created by DB (id)
      */
     public ChannelInfoDTO putChannelToDB(String externalId, String mcpName, boolean trusted);
@@ -49,28 +49,28 @@ public interface AdministrationFacade {
      * Deletes channel from database.
      *
      * @param internalId unique ID in DB
-     * @param deleteAllChannelRecords indicates wether to delete all records
+     * @param deleteAllChannelMultimedia indicates whether to delete all multimedia
      * uploaded by this channel or to keep them.
      */
-    public void deleteChannel(String internalId, boolean deleteAllChannelRecords);
+    public void deleteChannel(String internalId, boolean deleteAllChannelMultimedia);
 
-    public List<MultimediumPreviewDTO> getRecordsByExternalId(String externalId);
+    public List<MultimediumPreviewDTO> getMultimediaByExternalId(String externalId);
     
-    public String putRecordToDB(String externalId, String mcpName);
+    public String putMultimediumToDB(String externalId, String mcpName);
     
-    public RecordInfoDTO getRecordInfo(String internalId);
+    public MultimediumInfoDTO getMultimediumInfo(String internalId);
     
-    public void updateRecord(String internalId);
+    public void updateMultimedium(String internalId);
     
-    public List<MultimediumPreviewDTO> getWaitingRecords();
+    public List<MultimediumPreviewDTO> getWaitingMultimedia();
     
-    public void acceptRecord(String internalId);
+    public void acceptMultimedium(String internalId);
     
-    public void rejectRecord(String internalId);
+    public void rejectMultimedium(String internalId);
     
     public void addAllNewMedia();
 
-    public List<PublicRecordDTO> getRecordsPage(int page);
+    public List<PublicMultimediumDTO> getMultimediaPage(int page);
 
     public List<PublicChannelDTO> getTrustedChannels();
 }

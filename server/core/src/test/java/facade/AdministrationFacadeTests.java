@@ -1,11 +1,11 @@
 package facade;
 
 import com.jts.mediahunter.core.service.DatabaseService;
-import com.jts.mediahunter.core.service.PluginService;
+import com.jts.mediahunter.plugins.service.PluginService;
+import com.jts.mediahunter.domain.dto.ChannelPreviewDTO;
 import com.jts.mediahunter.domain.entities.Channel;
 import com.jts.mediahunter.web.WebAdminApplication;
 import com.jts.mediahunter.domain.dto.ChannelInfoDTO;
-import com.jts.mediahunter.domain.dto.FindChannelDTO;
 import com.jts.mediahunter.web.facade.AdministrationFacade;
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +101,7 @@ public class AdministrationFacadeTests {
     @Test
     public void getChannelsByExternalIdCorrent(){
         createPluginChannel("coolstuff", "Vimeo", true);
-        List<FindChannelDTO> channels = admin.getChannelsByExternalId("coolstuff");
+        List<ChannelPreviewDTO> channels = admin.getChannelsByExternalId("coolstuff");
         assertThat(channels).hasSize(2).extracting("externalId").containsOnly("coolstuff");
         assertThat(channels).extracting("mcpName").containsExactlyInAnyOrder("YouTube", "Vimeo");
         assertThat(channels).extracting("id").containsExactlyInAnyOrder(null, String.valueOf(0));

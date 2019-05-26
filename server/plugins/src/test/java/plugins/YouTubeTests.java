@@ -2,7 +2,7 @@ package plugins;
 
 import com.jts.mediahunter.domain.Thumbnail;
 import com.jts.mediahunter.domain.entities.Channel;
-import com.jts.mediahunter.domain.entities.Record;
+import com.jts.mediahunter.domain.entities.Multimedium;
 import com.jts.mediahunter.plugins.PluginsConfiguration;
 import com.jts.mediahunter.plugins.youtube.YouTube;
 import java.time.LocalDateTime;
@@ -77,10 +77,10 @@ public class YouTubeTests {
     }
 
     @Test
-    public void getRecordByExternalIdCorrect() {
-        Record record = yt.getRecordByExternalId("wvJPLXmRrpk");
+    public void getMultimediumByExternalId() {
+        Multimedium multimedium = yt.getMultimediumByExternalId("wvJPLXmRrpk");
 
-        Record recordToCompare = Record.builder()
+        Multimedium multimediumToCompare = Multimedium.builder()
                 .description("The hard core of HBOK crew, Cajt, is blading almost every day. He started skating about 20 years ago, and he's still killing it!")
                 .externalId("wvJPLXmRrpk")
                 .mcpName(yt.getMcpName())
@@ -91,35 +91,35 @@ public class YouTubeTests {
                 .uri(UriComponentsBuilder.fromUriString("https://www.youtube.com/watch?v=wvJPLXmRrpk").build().toUri())
                 .build();
 
-        assertThat(record).isNotNull().isEqualToComparingFieldByField(recordToCompare);
+        assertThat(multimedium).isNotNull().isEqualToComparingFieldByField(multimediumToCompare);
     }
 
     @Test
-    public void getAllChannelRecordsCorrect() {
-        List<Record> records = yt.getAllChannelRecords("UCZdunuduJOFxxK0R41o4X-A");
+    public void getAllChannelMultimedia() {
+        List<Multimedium> multimedia = yt.getAllChannelMultimedia("UCZdunuduJOFxxK0R41o4X-A");
 
-        assertThat(records).hasSize(45).extracting("name").contains("JEDLA - 2011 - HBOK crew",
+        assertThat(multimedia).hasSize(45).extracting("name").contains("JEDLA - 2011 - HBOK crew",
                 "ONE MINUTE EDIT - Martin \"Santos\" Charvát",
                 "Tom - One Trick",
                 "Filip Samsonek - HBOK crew - Still Here, Still Blading",
                 "Jiří Rygál - HBOK crew - Still Here, Still Blading");
-        assertThat(records).extracting("mcpName").containsOnly("YouTube");
-        assertThat(records).extracting("uploaderExternalId").containsOnly("UCZdunuduJOFxxK0R41o4X-A");
+        assertThat(multimedia).extracting("mcpName").containsOnly("YouTube");
+        assertThat(multimedia).extracting("uploaderExternalId").containsOnly("UCZdunuduJOFxxK0R41o4X-A");
     }
 
     @Test
-    public void getAllChannelRecordsOver50Correct() {
+    public void getAllChannelMultimediaOver50Correct() {
         // ID of James Cordens youtube channel. It has over 2900 videos (14.11.2018) 
-        List<Record> records = yt.getAllChannelRecords("UCJ0uqCI0Vqr2Rrt1HseGirg");
-        assertThat(records).size().isGreaterThan(2900);
+        List<Multimedium> multimedia = yt.getAllChannelMultimedia("UCJ0uqCI0Vqr2Rrt1HseGirg");
+        assertThat(multimedia).size().isGreaterThan(2900);
     }
 
     @Test
-    public void getNewRecordsCorrect() {
+    public void getNewMultimediaCorrect() {
         LocalDateTime time = LocalDateTime.of(2014, Month.JULY, 28, 15, 30);
-        List<Record> records = yt.getNewRecords("UCZdunuduJOFxxK0R41o4X-A", time);
-        List<Record> allChannelRecords = yt.getAllChannelRecords("UCZdunuduJOFxxK0R41o4X-A");
-        assertThat(records).containsAll(allChannelRecords.stream().filter( record -> time.isBefore(((Record) record).getUploadTime()) ).collect(Collectors.toList()));
+        List<Multimedium> multimedia = yt.getNewMultimedia("UCZdunuduJOFxxK0R41o4X-A", time);
+        List<Multimedium> allChannelMultimedia = yt.getAllChannelMultimedia("UCZdunuduJOFxxK0R41o4X-A");
+        assertThat(multimedia).containsAll(allChannelMultimedia.stream().filter(multimedium -> time.isBefore(((Multimedium) multimedium).getUploadTime()) ).collect(Collectors.toList()));
     }
 
 }

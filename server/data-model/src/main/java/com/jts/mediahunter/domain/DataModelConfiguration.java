@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan
-public class DomainConfiguration {
+public class DataModelConfiguration {
     
 }

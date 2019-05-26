@@ -4,8 +4,8 @@ export interface ChannelDataObject {
     name: string;
     mcpName: string;
     uri: string;
-    recordCount?: Number;
-    acceptedRecordCount?: Number;
-    lastRecordUpload?: Date;
+    multimediumCount?: Number;
+    acceptedMultimediumCount?: Number;
+    lastMultimediumUpload?: Date;
     trusted?: boolean;
 }

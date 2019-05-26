@@ -1,7 +1,7 @@
 package com.jts.mediahunter.web.rest.controller.administration;
 
 import com.jts.mediahunter.domain.dto.ChannelInfoDTO;
-import com.jts.mediahunter.domain.dto.FindChannelDTO;
+import com.jts.mediahunter.domain.dto.ChannelPreviewDTO;
 import com.jts.mediahunter.domain.dto.PostChannelDTO;
 import com.jts.mediahunter.web.facade.AdministrationFacade;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +22,8 @@ public class ChannelRestController {
     private AdministrationFacade admin;
 
     @GetMapping("/search/{channelId}")
-    public List<FindChannelDTO> listChannelsByExternalId(@PathVariable(name = "channelId") String channelId) {
-        List<FindChannelDTO> channels = admin.getChannelsByExternalId(channelId);
+    public List<ChannelPreviewDTO> listChannelsByExternalId(@PathVariable(name = "channelId") String channelId) {
+        List<ChannelPreviewDTO> channels = admin.getChannelsByExternalId(channelId);
         return channels;
     }
 
@@ -43,16 +43,15 @@ public class ChannelRestController {
         return channel;
     }
 
-    //@GetMapping("/update/{channelId}")
-    public ChannelInfoDTO updateChannel(@PathVariable String internalId) {
+    @PatchMapping("/{channelId}")
+    public ChannelInfoDTO updateChannel(@PathVariable("channelId") String internalId) {
         admin.updateChannel(internalId);
-        // TODO
-        return null;
+        ChannelInfoDTO channel = admin.getChannelInfo(internalId);
+        return channel;
     }
 
-    //@DeleteMapping("/delete/{channelId}")
-    public void deleteChannel(@PathVariable String internalId) {
-        // TODO
+    @DeleteMapping("/{channelId}")
+    public void deleteChannel(@PathVariable("channelId") String internalId) {
         admin.deleteChannel(internalId, true);
     }
 

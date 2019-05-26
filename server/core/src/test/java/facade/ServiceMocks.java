@@ -1,7 +1,7 @@
 package facade;
 
 import com.jts.mediahunter.core.service.DatabaseService;
-import com.jts.mediahunter.core.service.PluginService;
+import com.jts.mediahunter.plugins.service.PluginService;
 import com.jts.mediahunter.domain.entities.Channel;
 import java.util.ArrayList;
 import java.util.List;

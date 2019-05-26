@@ -9,6 +9,6 @@ import java.util.List;
 @Builder
 public class PublicRecordListDTO {
 
-    private List<PublicRecordDTO> list;
+    private List<PublicMultimediumDTO> list;
 
 }

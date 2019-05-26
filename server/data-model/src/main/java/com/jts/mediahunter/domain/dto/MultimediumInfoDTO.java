@@ -14,7 +14,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class RecordInfoDTO {
+public class MultimediumInfoDTO {
     
     private String name;
     private String mcpName;

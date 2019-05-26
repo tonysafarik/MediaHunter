@@ -43,11 +43,11 @@ class Login extends React.Component<Props, State> {
         return (
             <div className="Login">
                 <Logo/>
-                {this.state.correct? null : <div>Bad credentials</div>}
                 <form>
                     <input className="Input" onChange={this.onUsernameInputChange} placeholder="USERNAME" type="text"/>
                     <input className="Input" onChange={this.onPasswordInputChange} placeholder="PASSWORD" type="password"/>
-                    <ButtonLink onClick={this.onLoginButtonClick} to="/">Login</ButtonLink>
+                    <div onClick={this.onLoginButtonClick} className="ButtonLink"><span>Login</span></div>
+                    {this.state.correct? null : <div style={{color: 'red'}}>Bad credentials</div>}
                 </form>
             </div>
         );
@@ -58,12 +58,9 @@ class Login extends React.Component<Props, State> {
             localStorage.setItem("token", btoa(this.state.username + ":" + this.state.password));
             this.props.history.push("/");
         }).catch(() => {
-            console.log("Username and/or password is not correct");
             let state = {...this.state};
             state.correct = false;
             this.setState(state);
-            console.log(this.state.correct);
-            console.log(state.correct);
         });
 
     }

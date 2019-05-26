@@ -1,7 +1,6 @@
 package com.jts.mediahunter.plugins.vimeo.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

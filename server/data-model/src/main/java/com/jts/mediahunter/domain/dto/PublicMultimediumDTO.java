@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 
 @Data
 @Builder
-public class PublicRecordDTO {
+public class PublicMultimediumDTO {
 
     private String id;
     private String externalId;

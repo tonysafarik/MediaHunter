@@ -3,11 +3,8 @@ package com.jts.mediahunter.plugins.vimeo.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jts.mediahunter.domain.Thumbnail;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.json.JSONArray;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -15,7 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Slf4j

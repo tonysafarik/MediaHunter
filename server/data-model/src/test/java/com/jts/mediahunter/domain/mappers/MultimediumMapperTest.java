@@ -1,12 +1,12 @@
 package com.jts.mediahunter.domain.mappers;
 
-import com.jts.mediahunter.domain.DomainConfiguration;
+import com.jts.mediahunter.domain.DataModelConfiguration;
 import com.jts.mediahunter.domain.RecordStage;
 import com.jts.mediahunter.domain.Thumbnail;
+import com.jts.mediahunter.domain.dto.MultimediumInfoDTO;
 import com.jts.mediahunter.domain.dto.MultimediumPreviewDTO;
-import com.jts.mediahunter.domain.dto.PublicRecordDTO;
-import com.jts.mediahunter.domain.dto.RecordInfoDTO;
-import com.jts.mediahunter.domain.entities.Record;
+import com.jts.mediahunter.domain.dto.PublicMultimediumDTO;
+import com.jts.mediahunter.domain.entities.Multimedium;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -27,11 +27,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {DomainConfiguration.class})
-public class RecordMapperTest {
+@ContextConfiguration(classes = {DataModelConfiguration.class})
+public class MultimediumMapperTest {
 
     @Autowired
-    private RecordMapper mapper;
+    private MultimediumMapper mapper;
 
     @Rule
     public TestRule watcher = new TestWatcher() {
@@ -40,11 +40,11 @@ public class RecordMapperTest {
         }
     };
 
-    private static Record record;
+    private static Multimedium multimedium;
 
     @BeforeClass
     public static void beforeClass() {
-        record = Record.builder()
+        multimedium = Multimedium.builder()
                 .description("")
                 .externalId("")
                 .id("")
@@ -60,20 +60,20 @@ public class RecordMapperTest {
     }
 
     @Test
-    public void recordToFindRecordDTO(){
-        MultimediumPreviewDTO find = mapper.recordToFindRecordDTO(record);
+    public void multimediumToMultimediumPreviewDTO(){
+        MultimediumPreviewDTO find = mapper.multimediumToMultimediumPreviewDTO(multimedium);
         assertThat(find).hasNoNullFieldsOrProperties();
     }
 
     @Test
-    public void recordToRecordInfoDTO(){
-        RecordInfoDTO info = mapper.recordToRecordInfoDTO(record);
+    public void multimediumToMultimediumInfoDTO(){
+        MultimediumInfoDTO info = mapper.multimediumToMultimediumInfoDTO(multimedium);
         assertThat(info).hasNoNullFieldsOrProperties();
     }
 
     @Test
-    public void recordToPublicRecordDTO(){
-        PublicRecordDTO pub = mapper.recordToPublicRecordDTO(record);
+    public void multimediumToPublicMultimediumDTO(){
+        PublicMultimediumDTO pub = mapper.multimediumToPublicMultimediumDTO(multimedium);
         assertThat(pub).hasNoNullFieldsOrProperties();
     }
 

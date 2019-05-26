@@ -12,7 +12,7 @@ import java.util.Map;
  * @author Tony
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class YouTubeRecordList {
+public class YouTubeVideoList {
 
     @JsonProperty
     private String nextPageToken;
@@ -26,10 +26,10 @@ public class YouTubeRecordList {
         this.resultsPerPage = pageInfo.get("resultsPerPage");
     }
 
-    List<YouTubeRecord> videos;
+    List<YouTubeVideo> videos;
 
     @JsonProperty("items")
-    private void getItems(YouTubeRecord[] videos) {
+    private void getItems(YouTubeVideo[] videos) {
         this.videos = new ArrayList<>();
         this.videos.addAll(Arrays.asList(videos));
     }
@@ -42,7 +42,7 @@ public class YouTubeRecordList {
         return resultsPerPage;
     }
 
-    public List<YouTubeRecord> getRecords() {
+    public List<YouTubeVideo> getVideos() {
         return this.videos;
     }
 

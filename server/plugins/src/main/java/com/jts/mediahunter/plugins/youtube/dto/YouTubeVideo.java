@@ -14,7 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  * @author Tony
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class YouTubeRecord {
+public class YouTubeVideo {
 
     @JsonProperty
     private String id;

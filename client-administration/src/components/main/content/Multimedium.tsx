@@ -5,6 +5,7 @@ import "../../style/Multimedium.css"
 import BackendApi from "../MediaHunterApi";
 import LoadingCircle from "../fragment/LoadingCircle";
 import {Link} from "react-router-dom";
+import SettingsButton from "../fragment/SettingsButton";
 
 export interface Props extends RouteComponentProps<{ eid: string }> {
 }
@@ -20,6 +21,7 @@ class Multimedium extends React.Component<Props, State> {
         this.state = {
             multimedium: undefined
         };
+        this.multimediumShouldUpdate = this.multimediumShouldUpdate.bind(this);
     }
 
     async componentDidMount() {
@@ -75,6 +77,11 @@ class Multimedium extends React.Component<Props, State> {
                         <span className="ItemName">{multimedium.name}</span>
                     </a>
                     <span className="McpName">{multimedium.mcpName}</span>
+                    <SettingsButton>
+                        <div className={"SettingsDialog"}>
+                            <div onClick={this.multimediumShouldUpdate}>Update Multimedium</div>
+                        </div>
+                    </SettingsButton>
                     <div className="EntityDetail">
                         <span>External ID: {multimedium.externalId}</span>
                         <span>Uploader external ID: <Link
@@ -87,6 +94,20 @@ class Multimedium extends React.Component<Props, State> {
             </div>
         );
     }
+
+    multimediumShouldUpdate() {
+        if (this.state.multimedium !== undefined && this.state.multimedium.id !== undefined) {
+            BackendApi.multimedium.update(this.state.multimedium.id).then((promise) => {
+                let state = {...this.state};
+                state.multimedium = promise.data;
+                this.setState(state);
+            }).catch(() => {
+                console.log("Error");
+            });
+        }
+
+    }
+
 }
 
 export default Multimedium;

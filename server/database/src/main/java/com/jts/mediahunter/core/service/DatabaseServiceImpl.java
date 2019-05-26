@@ -1,14 +1,12 @@
 package com.jts.mediahunter.core.service;
 
 import com.jts.mediahunter.core.dao.ChannelDAO;
-import com.jts.mediahunter.core.dao.RecordDAO;
+import com.jts.mediahunter.core.dao.MultimediumDAO;
 import com.jts.mediahunter.domain.RecordStage;
-import com.jts.mediahunter.domain.dto.ChannelInfoDTO;
 import com.jts.mediahunter.domain.entities.Channel;
-import com.jts.mediahunter.domain.entities.Record;
+import com.jts.mediahunter.domain.entities.Multimedium;
 
 import java.util.List;
-import java.util.Objects;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,7 @@ import org.springframework.stereotype.Component;
 public class DatabaseServiceImpl implements DatabaseService {
 
     @Autowired
-    private RecordDAO recordDAO;
+    private MultimediumDAO multimediumDAO;
 
     @Autowired
     private ChannelDAO channelDAO;
@@ -52,65 +50,65 @@ public class DatabaseServiceImpl implements DatabaseService {
     }
 
     @Override
-    public void deleteChannel(String internalID, boolean deleteAllChannelRecords) {
+    public void deleteChannel(String internalID, boolean deleteAllChannelMultimedia) {
         Channel channel = getChannelById(internalID);
         if (channel == null) {
             log.error("Channel with ID: " + internalID + " not found");
             return;
         }
-        if (deleteAllChannelRecords) {
-            List<Record> records = recordDAO.findByUploader(channel.getExternalId(), channel.getMcpName());
-            recordDAO.deleteAll(records);
+        if (deleteAllChannelMultimedia) {
+            List<Multimedium> multimedia = multimediumDAO.findByUploader(channel.getExternalId(), channel.getMcpName());
+            multimediumDAO.deleteAll(multimedia);
         }
         channelDAO.delete(channel);
     }
 
     @Override
-    public List<Record> getRecordsByExternalId(String externalId) {
-        return recordDAO.findByExternalId(externalId);
+    public List<Multimedium> getMultimediaByExternalId(String externalId) {
+        return multimediumDAO.findByExternalId(externalId);
     }
 
     @Override
-    public String putRecordToDB(Record record) {
-        record.setStage(RecordStage.WAITING);
-        Record inserted = recordDAO.insert(record);
+    public String putMultimediumToDB(Multimedium multimedium) {
+        multimedium.setStage(RecordStage.WAITING);
+        Multimedium inserted = multimediumDAO.insert(multimedium);
         log.info("Inserted: {}", inserted.toString());
         return inserted.getId();
     }
 
     @Override
-    public Record getRecordById(String internalId) {
-        return recordDAO.findById(internalId).orElse(null);
+    public Multimedium getMultimediumById(String internalId) {
+        return multimediumDAO.findById(internalId).orElse(null);
     }
 
     @Override
-    public void updateRecord(Record record) {
-        recordDAO.save(record);
+    public void updateMultimedium(Multimedium multimedium) {
+        multimediumDAO.save(multimedium);
     }
 
     @Override
-    public void acceptRecord(Record record) {
-        if (record == null || record.getStage() == RecordStage.ACCEPTED) {
+    public void acceptMultimedium(Multimedium multimedium) {
+        if (multimedium == null || multimedium.getStage() == RecordStage.ACCEPTED) {
             return;
         }
-        String mcpName = record.getMcpName();
-        Channel channel = getChannelsByExternalId(record.getUploaderExternalId())
+        String mcpName = multimedium.getMcpName();
+        Channel channel = getChannelsByExternalId(multimedium.getUploaderExternalId())
                 .stream()
                 .filter(ch -> ch.getMcpName().equals(mcpName))
                 .findAny()
                 .orElse(null);
-        record.setStage(RecordStage.ACCEPTED);
-        record = recordDAO.save(record);
+        multimedium.setStage(RecordStage.ACCEPTED);
+        multimedium = multimediumDAO.save(multimedium);
         if (channel != null) {
-            channel.registerNewAcceptedRecord(record);
+            channel.registerNewAcceptedMultimedium(multimedium);
             updateChannel(channel);
         }
-        log.info("Record with ID: " + record.getId() + " was " + record.getStage().toString());
+        log.info("Multimedium with ID: " + multimedium.getId() + " was " + multimedium.getStage().toString());
     }
 
     @Override
-    public List<Record> getWaitingRecords() {
-        return recordDAO.findWaitingRecords();
+    public List<Multimedium> getWaitingMultimedia() {
+        return multimediumDAO.findWaitingMultimedia();
     }
 
     @Override
@@ -119,14 +117,14 @@ public class DatabaseServiceImpl implements DatabaseService {
     }
 
     @Override
-    public List<Record> getRecordPage(int page) {
-        return recordDAO.findAcceptedRecords(PageRequest.of(page, 10,
+    public List<Multimedium> getMultimediaPage(int page) {
+        return multimediumDAO.findAcceptedMultimedia(PageRequest.of(page, 10,
                 new Sort(Sort.Direction.DESC, "uploadTime"))).getContent();
     }
 
     @Override
-    public List<Record> getMultimediaByUploaderExtednalId(String uploaderExternalId) {
-        return recordDAO.findByUploaderExternalId(uploaderExternalId);
+    public List<Multimedium> getMultimediaByUploaderExtednalId(String uploaderExternalId) {
+        return multimediumDAO.findByUploaderExternalId(uploaderExternalId);
     }
 
     @Override
@@ -135,23 +133,23 @@ public class DatabaseServiceImpl implements DatabaseService {
     }
 
     @Override
-    public void rejectRecord(Record record) {
-        if (record == null || record.getStage() == RecordStage.REJECTED) {
+    public void rejectMultimedium(Multimedium multimedium) {
+        if (multimedium == null || multimedium.getStage() == RecordStage.REJECTED) {
             return;
         }
-        record.setStage(RecordStage.REJECTED);
-        record = recordDAO.save(record);
-        String mcpName = record.getMcpName();
-        Channel channel = getChannelsByExternalId(record.getUploaderExternalId())
+        multimedium.setStage(RecordStage.REJECTED);
+        multimedium = multimediumDAO.save(multimedium);
+        String mcpName = multimedium.getMcpName();
+        Channel channel = getChannelsByExternalId(multimedium.getUploaderExternalId())
                 .stream()
                 .filter(ch -> ch.getMcpName().equals(mcpName))
                 .findAny()
                 .orElse(null);
         if (channel != null) {
-            channel.acceptedRecordRejected();
+            channel.acceptedMultimediumRejected();
             updateChannel(channel);
         }
-        log.info("Record with ID: " + record.getId() + " was " + record.getStage().toString());
+        log.info("Multimedium with ID: " + multimedium.getId() + " was " + multimedium.getStage().toString());
     }
 
 }

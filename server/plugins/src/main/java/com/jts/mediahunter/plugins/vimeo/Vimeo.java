@@ -1,7 +1,7 @@
 package com.jts.mediahunter.plugins.vimeo;
 
 import com.jts.mediahunter.domain.entities.Channel;
-import com.jts.mediahunter.domain.entities.Record;
+import com.jts.mediahunter.domain.entities.Multimedium;
 import com.jts.mediahunter.plugins.MediaContentProviderPlugin;
 import com.jts.mediahunter.plugins.vimeo.dto.VimeoUser;
 import com.jts.mediahunter.plugins.vimeo.dto.VimeoVideo;
@@ -18,13 +18,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.PostConstruct;
-import java.net.URI;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 @Slf4j
@@ -70,17 +66,17 @@ public class Vimeo implements MediaContentProviderPlugin {
     }
 
     @Override
-    public Record getRecordByExternalId(String recordId) {
-        String uri = API_URI + "/videos/" + recordId;
+    public Multimedium getMultimediumByExternalId(String multimediumExternalID) {
+        String uri = API_URI + "/videos/" + multimediumExternalID;
         VimeoVideo video = null;
         try {
             video = rest.exchange(uri, HttpMethod.GET, new HttpEntity<>("parameters", headers), VimeoVideo.class).getBody();
         } catch (RestClientException e) {
-            log.error("Multimedium on Vimeo with ID " + recordId + " doesn't exist");
+            log.error("Multimedium on Vimeo with ID " + multimediumExternalID + " doesn't exist");
         }
 
         if (video != null) {
-            return Record.builder()
+            return Multimedium.builder()
                     .description(video.getDescription())
                     .externalId(video.getExternalId())
                     .mcpName(this.SERVICE_NAME)
@@ -100,13 +96,13 @@ public class Vimeo implements MediaContentProviderPlugin {
     }
 
     @Override
-    public List<Record> getAllChannelRecords(String channelId) {
-        return getNewRecords(channelId, LocalDateTime.MIN);
+    public List<Multimedium> getAllChannelMultimedia(String channelId) {
+        return getNewMultimedia(channelId, LocalDateTime.MIN);
     }
 
     @Override
-    public List<Record> getNewRecords(String channelId, LocalDateTime oldestRecord) {
-        List<Record> records = new ArrayList<>();
+    public List<Multimedium> getNewMultimedia(String channelId, LocalDateTime oldestMultimedium) {
+        List<Multimedium> multimedia = new ArrayList<>();
 
         String uri = API_URI + "/users/" + channelId + "/videos";
         VimeoVideoList list = null;
@@ -133,11 +129,8 @@ public class Vimeo implements MediaContentProviderPlugin {
 
             if (list != null) {
                 for (VimeoVideo video : list.getVideos()) {
-                    log.info(video.getName() + " " + video.getUploadTime().toString());
-                    log.info("oldest record " + oldestRecord.toString());
-                    log.info(String.valueOf(video.getUploadTime().toEpochSecond(ZoneOffset.UTC) - oldestRecord.toEpochSecond(ZoneOffset.UTC)));
-                    if (video.getUploadTime().isAfter(oldestRecord)) {
-                        records.add(Record.builder()
+                    if (video.getUploadTime().isAfter(oldestMultimedium)) {
+                        multimedia.add(Multimedium.builder()
                                 .description(video.getDescription())
                                 .externalId(video.getExternalId())
                                 .mcpName(this.SERVICE_NAME)
@@ -155,6 +148,6 @@ public class Vimeo implements MediaContentProviderPlugin {
                 uri = API_URI + list.getNextPage();
             }
         } while (list != null && list.getNextPage() != null);
-        return records;
+        return multimedia;
     }
 }

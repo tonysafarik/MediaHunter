@@ -1,7 +1,7 @@
 package dao;
 
 import static org.assertj.core.api.Assertions.*;
-import com.jts.mediahunter.core.CoreConfiguration;
+import com.jts.mediahunter.core.DatabaseConfiguration;
 import com.jts.mediahunter.core.dao.ChannelDAO;
 import com.jts.mediahunter.domain.entities.Channel;
 import java.util.List;
@@ -23,7 +23,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ContextConfiguration(classes = {CoreConfiguration.class})
+@ContextConfiguration(classes = {DatabaseConfiguration.class})
 @Slf4j
 public class ChannelDAOTests {
 

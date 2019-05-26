@@ -12,6 +12,8 @@ interface State {
     channels: ChannelDataObject[];
     selectedChannel?: ChannelDataObject;
     eid: string;
+    empty: boolean;
+    loading: boolean;
 }
 
 class ChannelList extends React.Component<Props, State> {
@@ -20,7 +22,9 @@ class ChannelList extends React.Component<Props, State> {
         this.state = {
             channels: [],
             selectedChannel: undefined,
-            eid: this.props.match.params.eid
+            eid: this.props.match.params.eid,
+            empty: false,
+            loading: true
         };
         this.channelShouldUpdate = this.channelShouldUpdate.bind(this);
     }
@@ -30,12 +34,20 @@ class ChannelList extends React.Component<Props, State> {
     }
 
     async getChannels(id: string) {
-        console.log(id);
-        let promise = await BackendApi.channel.getPreviewsByExternalId(id);
         let state = {...this.state};
-        state.channels = promise.data;
-        console.log("promise that i got", promise);
+        state.loading = true;
         this.setState(state);
+        BackendApi.channel.getPreviewsByExternalId(id).then((promise) => {
+            state.channels = promise.data;
+            if (state.channels.length == 0) {
+                state.empty = true;
+            } else {
+                state.empty = false;
+            }
+            state.loading = false;
+            this.setState(state);
+        });
+
     }
 
     componentWillReceiveProps(nextProps: Readonly<Props>, nextContext: any): void {
@@ -48,8 +60,10 @@ class ChannelList extends React.Component<Props, State> {
     }
 
     render() {
-        if (this.state.channels.length < 1) {
+        if (this.state.loading) {
             return <span>Loading</span>;
+        } else if (this.state.empty) {
+            return <span>Can't find channel with this ID</span>;
         } else {
             return (
                 <React.Fragment>

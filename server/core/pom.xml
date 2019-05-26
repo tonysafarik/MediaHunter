@@ -14,7 +14,7 @@
         <artifactId>mediahunter</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>web</artifactId>
+    <artifactId>core</artifactId>
     <packaging>jar</packaging>
     <dependencies>
         
@@ -33,12 +33,12 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>domain</artifactId>
+            <artifactId>data-model</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>database</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -46,7 +46,4 @@
             <artifactId>mockito-core</artifactId>
         </dependency>
     </dependencies>
-
-    
-    
 </project>

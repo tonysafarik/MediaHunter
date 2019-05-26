@@ -1,8 +1,9 @@
 package com.jts.mediahunter.domain.mappers;
 
-import com.jts.mediahunter.domain.DomainConfiguration;
+import com.jts.mediahunter.domain.DataModelConfiguration;
 import com.jts.mediahunter.domain.dto.ChannelInfoDTO;
-import com.jts.mediahunter.domain.dto.FindChannelDTO;
+import com.jts.mediahunter.domain.dto.ChannelPreviewDTO;
+import com.jts.mediahunter.domain.dto.PublicChannelDTO;
 import com.jts.mediahunter.domain.entities.Channel;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.BeforeClass;
@@ -24,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {DomainConfiguration.class})
+@ContextConfiguration(classes = {DataModelConfiguration.class})
 public class ChannelMapperTest {
 
     @Autowired
@@ -43,12 +44,12 @@ public class ChannelMapperTest {
     public static void beforeClass(){
         channel = Channel.builder()
                 .externalId("externalID")
-                .acceptedRecordCount(26L)
+                .acceptedMultimediumCount(26L)
                 .id("identification")
-                .lastRecordUpload(LocalDateTime.now())
+                .lastMultimediumUpload(LocalDateTime.now())
                 .mcpName("media content provider")
                 .name("channel name")
-                .recordCount(50L)
+                .multimediumCount(50L)
                 .trusted(false)
                 .uri(URI.create("http://www.somesite.org/something"))
                 .build();
@@ -61,8 +62,14 @@ public class ChannelMapperTest {
     }
 
     @Test
-    public void channelToFindChannelDTO(){
-        FindChannelDTO find = mapper.channelToFindChannelDTO(channel);
+    public void channelToChannelPreviewDTO(){
+        ChannelPreviewDTO find = mapper.channelToChannelPreviewDTO(channel);
+        assertThat(find).hasNoNullFieldsOrProperties();
+    }
+
+    @Test
+    public void channelToPublicChannelDTO(){
+        PublicChannelDTO find = mapper.channelToPublicChannelDTO(channel);
         assertThat(find).hasNoNullFieldsOrProperties();
     }
 

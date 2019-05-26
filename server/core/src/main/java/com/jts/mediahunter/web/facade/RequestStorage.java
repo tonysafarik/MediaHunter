@@ -1,6 +1,5 @@
 package com.jts.mediahunter.web.facade;
 
-import com.jts.mediahunter.domain.entities.Channel;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

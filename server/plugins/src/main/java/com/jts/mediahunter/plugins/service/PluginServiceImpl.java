@@ -1,7 +1,7 @@
-package com.jts.mediahunter.core.service;
+package com.jts.mediahunter.plugins.service;
 
 import com.jts.mediahunter.domain.entities.Channel;
-import com.jts.mediahunter.domain.entities.Record;
+import com.jts.mediahunter.domain.entities.Multimedium;
 import com.jts.mediahunter.plugins.MediaContentProviderPlugin;
 
 import java.time.LocalDateTime;
@@ -51,30 +51,30 @@ public class PluginServiceImpl implements PluginService {
     }
 
     @Override
-    public List<Record> getRecordsByExternalId(String externalId) {
-        List<Record> multimedia = new ArrayList<>();
+    public List<Multimedium> getMultimediaByExternalId(String externalId) {
+        List<Multimedium> multimedia = new ArrayList<>();
         for (Map.Entry<String, MediaContentProviderPlugin> entry : this.plugins.entrySet()) {
-            Record record = entry.getValue().getRecordByExternalId(externalId);
-            if (record != null) {
-                multimedia.add(record);
+            Multimedium multimedium = entry.getValue().getMultimediumByExternalId(externalId);
+            if (multimedium != null) {
+                multimedia.add(multimedium);
             }
         }
         return multimedia;
     }
 
     @Override
-    public Record getRecordByExternalId(String externalId, String nameOfMCP) {
-        return this.plugins.get(nameOfMCP).getRecordByExternalId(externalId);
+    public Multimedium getMultimediumByExternalId(String externalId, String nameOfMCP) {
+        return this.plugins.get(nameOfMCP).getMultimediumByExternalId(externalId);
     }
 
     @Override
-    public List<Record> getRecordsByUploaderExternalId(String externalId, String nameOfMCP) {
-        return this.plugins.get(nameOfMCP).getAllChannelRecords(externalId);
+    public List<Multimedium> getMultimediaByUploaderExternalId(String externalId, String nameOfMCP) {
+        return this.plugins.get(nameOfMCP).getAllChannelMultimedia(externalId);
     }
 
     @Override
-    public List<Record> getRecordsByUploaderExternalId(String uploaderExternalId, String nameOfMCP, LocalDateTime from) {
-        return this.plugins.get(nameOfMCP).getNewRecords(uploaderExternalId, from);
+    public List<Multimedium> getMultimediaByUploaderExternalId(String uploaderExternalId, String nameOfMCP, LocalDateTime from) {
+        return this.plugins.get(nameOfMCP).getNewMultimedia(uploaderExternalId, from);
     }
 
 }

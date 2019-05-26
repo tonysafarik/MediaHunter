@@ -55,22 +55,23 @@ public class Channel {
      * number of all media on this channel (no matter if accepted or not)
      */
     @Builder.Default
-    private Long recordCount = 0l;
+    private Long multimediumCount = 0l;
 
     /**
      * number of accepted media from this channel
      */
     @Builder.Default
-    private Long acceptedRecordCount = 0l;
+    private Long acceptedMultimediumCount = 0l;
 
     /**
-     * date and time of last record upload (no matter if waiting, accepted or
+     * date and time of last multimedium upload (no matter if waiting, accepted or
      * rejected)
      */
-    private LocalDateTime lastRecordUpload;
+    private LocalDateTime lastMultimediumUpload;
 
     @NonNull
     @Builder.Default
+    @Indexed
     private boolean trusted = false;
 
     /**
@@ -85,24 +86,22 @@ public class Channel {
         return channel.getExternalId().equals(this.externalId) && channel.getMcpName().equals(this.mcpName);
     }
 
-    public void registerNewRecord(Record record) {
-        this.recordCount++;
-        if (record.getStage().equals(RecordStage.ACCEPTED)) {
-            registerNewAcceptedRecord(record);
+    public void registerNewMultimedium(Multimedium multimedium) {
+        this.multimediumCount++;
+        if (multimedium.getStage().equals(RecordStage.ACCEPTED)) {
+            registerNewAcceptedMultimedium(multimedium);
         }
-        if (this.lastRecordUpload == null || record.getUploadTime().isAfter(this.lastRecordUpload)) {
-            this.lastRecordUpload = record.getUploadTime();
+        if (this.lastMultimediumUpload == null || multimedium.getUploadTime().isAfter(this.lastMultimediumUpload)) {
+            this.lastMultimediumUpload = multimedium.getUploadTime();
         }
     }
 
-    public void registerNewAcceptedRecord(Record record) {
-        this.acceptedRecordCount++;
+    public void registerNewAcceptedMultimedium(Multimedium multimedium) {
+        this.acceptedMultimediumCount++;
     }
 
-    public void acceptedRecordRejected() {
-        this.acceptedRecordCount--;
+    public void acceptedMultimediumRejected() {
+        this.acceptedMultimediumCount--;
     }
-
-    //TODO: accepted record -> rejected needs to decrement this.acceptedRecordCount
 
 }

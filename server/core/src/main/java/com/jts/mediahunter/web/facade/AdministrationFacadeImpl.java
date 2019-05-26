@@ -1,17 +1,17 @@
 package com.jts.mediahunter.web.facade;
 
 import com.jts.mediahunter.core.service.DatabaseService;
-import com.jts.mediahunter.core.service.PluginService;
+import com.jts.mediahunter.plugins.service.PluginService;
 import com.jts.mediahunter.domain.RecordStage;
 import com.jts.mediahunter.domain.entities.Channel;
-import com.jts.mediahunter.domain.entities.Record;
+import com.jts.mediahunter.domain.entities.Multimedium;
 import com.jts.mediahunter.domain.dto.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.jts.mediahunter.domain.mappers.ChannelMapper;
-import com.jts.mediahunter.domain.mappers.RecordMapper;
+import com.jts.mediahunter.domain.mappers.MultimediumMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
     private ChannelMapper channelMapper;
 
     @Autowired
-    private RecordMapper recordMapper;
+    private MultimediumMapper multimediumMapper;
 
     @Autowired
     private DatabaseService db;
@@ -35,16 +35,16 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
     @Autowired
     private PluginService plugins;
 
-    private FindChannelDTO channelToFindChannelDTO(Channel channel) {
-        return channelMapper.channelToFindChannelDTO(channel);
+    private ChannelPreviewDTO channelToFindChannelDTO(Channel channel) {
+        return channelMapper.channelToChannelPreviewDTO(channel);
     }
 
     @Override
-    public List<FindChannelDTO> getChannelsByExternalId(String externalId) {
+    public List<ChannelPreviewDTO> getChannelsByExternalId(String externalId) {
         List<Channel> dbChannels = db.getChannelsByExternalId(externalId);
         List<Channel> pluginChannels = plugins.getChannelsByExternalId(externalId);
 
-        List<FindChannelDTO> foundChannels = new ArrayList<>();
+        List<ChannelPreviewDTO> foundChannels = new ArrayList<>();
 
         for (int i = 0; i < dbChannels.size(); i++) {
             for (int j = 0; j < pluginChannels.size(); i++) {
@@ -69,32 +69,32 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
             RequestStorage.addToChannelStorage(externalId, mcpName);
             Channel channel = plugins.getChannelByExternalId(externalId, mcpName);
             channel.setTrusted(trusted);
-            List<Record> records = plugins.getRecordsByUploaderExternalId(externalId, mcpName);
-            List<Record> recordsDB = db.getMultimediaByUploaderExtednalId(externalId)
+            List<Multimedium> multimedia = plugins.getMultimediaByUploaderExternalId(externalId, mcpName);
+            List<Multimedium> multimediaDB = db.getMultimediaByUploaderExtednalId(externalId)
                     .stream()
                     .filter(r -> r.getMcpName().equals(mcpName))
                     .collect(Collectors.toList());
 
-            for (int i = 0; i < records.size(); i++) {
+            for (int i = 0; i < multimedia.size(); i++) {
                 boolean removed = false;
-                for (int j = 0; j < recordsDB.size(); j++) {
-                    if (recordsDB.get(j).isSameAs(records.get(i))) {
+                for (int j = 0; j < multimediaDB.size(); j++) {
+                    if (multimediaDB.get(j).isSameAs(multimedia.get(i))) {
                         removed = true;
-                        if (trusted && recordsDB.get(j).getStage() != RecordStage.REJECTED) {
-                            db.acceptRecord(recordsDB.get(j));
+                        if (trusted && multimediaDB.get(j).getStage() != RecordStage.REJECTED) {
+                            db.acceptMultimedium(multimediaDB.get(j));
                         }
-                        channel.registerNewRecord(recordsDB.get(j));
+                        channel.registerNewMultimedium(multimediaDB.get(j));
                         break;
                     }
                 }
                 if (removed) {
                     continue;
                 }
-                db.putRecordToDB(records.get(i));
+                db.putMultimediumToDB(multimedia.get(i));
                 if (trusted) {
-                    db.acceptRecord(records.get(i));
+                    db.acceptMultimedium(multimedia.get(i));
                 }
-                channel.registerNewRecord(records.get(i));
+                channel.registerNewMultimedium(multimedia.get(i));
             }
 
             channel = db.putChannelToDB(channel);
@@ -115,116 +115,142 @@ public class AdministrationFacadeImpl implements AdministrationFacade {
     public void updateChannel(String internalId) {
         Channel channel = db.getChannelById(internalId);
         Channel updatedChannel = plugins.getChannelByExternalId(channel.getExternalId(), channel.getMcpName());
+
+        List<Multimedium> knownMultimedia = db.getMultimediaByUploaderExtednalId(channel.getExternalId());
+        List<Multimedium> allMultimedia = plugins.getMultimediaByUploaderExternalId(channel.getExternalId(), channel.getMcpName());
+
+        for (int i = 0; i < allMultimedia.size(); i++) {
+            boolean shouldbreak = false;
+            for (Multimedium multimedium: knownMultimedia) {
+                if (allMultimedia.get(i).isSameAs(multimedium)) {
+                    allMultimedia.remove(i);
+                    shouldbreak = true;
+                    break;
+                }
+            }
+            if (shouldbreak) {
+                i--;
+            }
+        }
+
+        for (Multimedium multimedium: allMultimedia) {
+            db.putMultimediumToDB(multimedium);
+            if (channel.isTrusted()) {
+                db.acceptMultimedium(multimedium);
+            }
+            channel.registerNewMultimedium(multimedium);
+        }
+
         channel.setName(updatedChannel.getName());
-        // update more if needed
         db.updateChannel(channel);
     }
 
     @Override
-    public void deleteChannel(String internalId, boolean deleteAllChannelRecords) {
-        db.deleteChannel(internalId, deleteAllChannelRecords);
+    public void deleteChannel(String internalId, boolean deleteAllChannelMultimedia) {
+        db.deleteChannel(internalId, deleteAllChannelMultimedia);
     }
 
-    private MultimediumPreviewDTO recordToFindRecordDTO(Record record) {
-        return recordMapper.recordToFindRecordDTO(record);
+    private MultimediumPreviewDTO multimediumToMultimediumPreviewDTO(Multimedium multimedium) {
+        return multimediumMapper.multimediumToMultimediumPreviewDTO(multimedium);
     }
 
     @Override
-    public List<MultimediumPreviewDTO> getRecordsByExternalId(String externalId) {
-        List<Record> dbRecords = db.getRecordsByExternalId(externalId);
-        List<Record> pluginRecords = plugins.getRecordsByExternalId(externalId);
+    public List<MultimediumPreviewDTO> getMultimediaByExternalId(String externalId) {
+        List<Multimedium> dbMultimedia = db.getMultimediaByExternalId(externalId);
+        List<Multimedium> pluginMultimedia = plugins.getMultimediaByExternalId(externalId);
 
-        List<MultimediumPreviewDTO> foundRecords = new ArrayList<>();
+        List<MultimediumPreviewDTO> foundMultimedia = new ArrayList<>();
 
-        for (int i = 0; i < dbRecords.size(); i++) {
-            for (int j = 0; j < pluginRecords.size(); j++) {
-                if (dbRecords.get(i).isSameAs(pluginRecords.get(j))) {
-                    pluginRecords.remove(j);
+        for (int i = 0; i < dbMultimedia.size(); i++) {
+            for (int j = 0; j < pluginMultimedia.size(); j++) {
+                if (dbMultimedia.get(i).isSameAs(pluginMultimedia.get(j))) {
+                    pluginMultimedia.remove(j);
                     break;
                 }
             }
-            foundRecords.add(recordToFindRecordDTO(dbRecords.get(i)));
+            foundMultimedia.add(multimediumToMultimediumPreviewDTO(dbMultimedia.get(i)));
         }
 
-        for (Record pluginRecord : pluginRecords) {
-            foundRecords.add(recordToFindRecordDTO(pluginRecord));
+        for (Multimedium pluginMultimedium : pluginMultimedia) {
+            foundMultimedia.add(multimediumToMultimediumPreviewDTO(pluginMultimedium));
         }
 
-        return foundRecords;
+        return foundMultimedia;
     }
 
     @Override
-    public String putRecordToDB(String externalId, String mcpName) {
-        Record record = plugins.getRecordByExternalId(externalId, mcpName);
-        String id = db.putRecordToDB(record);
-        acceptRecord(id);
+    public String putMultimediumToDB(String externalId, String mcpName) {
+        Multimedium multimedium = plugins.getMultimediumByExternalId(externalId, mcpName);
+        String id = db.putMultimediumToDB(multimedium);
+        acceptMultimedium(id);
         return id;
     }
 
     @Override
-    public void acceptRecord(String internalId) {
-        Record record = db.getRecordById(internalId);
-        db.acceptRecord(record);
+    public void acceptMultimedium(String internalId) {
+        Multimedium multimedium = db.getMultimediumById(internalId);
+        db.acceptMultimedium(multimedium);
     }
 
     @Override
-    public RecordInfoDTO getRecordInfo(String internalId) {
-        Record record = db.getRecordById(internalId);
-        return recordMapper.recordToRecordInfoDTO(record);
+    public MultimediumInfoDTO getMultimediumInfo(String internalId) {
+        Multimedium multimedium = db.getMultimediumById(internalId);
+        return multimediumMapper.multimediumToMultimediumInfoDTO(multimedium);
     }
 
     @Override
-    public void updateRecord(String internalId) {
-        Record record = db.getRecordById(internalId);
-        Record updatedRecord = plugins.getRecordByExternalId(record.getExternalId(), record.getMcpName());
+    public void updateMultimedium(String internalId) {
+        Multimedium multimedium = db.getMultimediumById(internalId);
+        Multimedium updatedMultimedium = plugins.getMultimediumByExternalId(multimedium.getExternalId(), multimedium.getMcpName());
 
-        record.setDescription(updatedRecord.getDescription());
-        record.setName(updatedRecord.getName());
-        record.setThumbnail(updatedRecord.getThumbnail());
-        record.setUri(updatedRecord.getUri());
+        multimedium.setDescription(updatedMultimedium.getDescription());
+        multimedium.setName(updatedMultimedium.getName());
+        multimedium.setThumbnail(updatedMultimedium.getThumbnail());
+        multimedium.setUri(updatedMultimedium.getUri());
 
-        db.updateRecord(record);
+        db.updateMultimedium(multimedium);
     }
 
     @Override
-    public List<MultimediumPreviewDTO> getWaitingRecords() {
-        List<Record> records = db.getWaitingRecords();
+    public List<MultimediumPreviewDTO> getWaitingMultimedia() {
+        List<Multimedium> multimedia = db.getWaitingMultimedia();
         List<MultimediumPreviewDTO> found = new ArrayList<>();
-        for (Record record : records) {
-            found.add(recordToFindRecordDTO(record));
+        for (Multimedium multimedium : multimedia) {
+            found.add(multimediumToMultimediumPreviewDTO(multimedium));
         }
         return found;
     }
 
     @Override
-    public void rejectRecord(String internalId) {
-        Record record = db.getRecordById(internalId);
-        db.rejectRecord(record);
+    public void rejectMultimedium(String internalId) {
+        Multimedium multimedium = db.getMultimediumById(internalId);
+        db.rejectMultimedium(multimedium);
     }
 
     @Override
     public void addAllNewMedia() {
         List<Channel> channels = db.getAllChannels();
         for (Channel channel : channels) {
-            List<Record> records = plugins.getRecordsByUploaderExternalId(channel.getExternalId(), channel.getMcpName(), channel.getLastRecordUpload());
-            for (Record record : records) {
-                db.putRecordToDB(record);
+            List<Multimedium> multimedia = plugins.getMultimediaByUploaderExternalId(channel.getExternalId(), channel.getMcpName(), channel.getLastMultimediumUpload());
+            for (Multimedium multimedium : multimedia) {
+                db.putMultimediumToDB(multimedium);
                 if (channel.isTrusted()) {
-                    db.acceptRecord(record);
+                    db.acceptMultimedium(multimedium);
                 }
-                channel.registerNewRecord(record);
+                channel.registerNewMultimedium(multimedium);
+                db.updateChannel(channel);
             }
 
         }
     }
 
     @Override
-    public List<PublicRecordDTO> getRecordsPage(int page) {
-        List<Record> records = db.getRecordPage(page);
-        List<PublicRecordDTO> rec = new ArrayList<>();
-        for (Record record :
-                records) {
-            rec.add(recordMapper.recordToPublicRecordDTO(record));
+    public List<PublicMultimediumDTO> getMultimediaPage(int page) {
+        List<Multimedium> multimedia = db.getMultimediaPage(page);
+        List<PublicMultimediumDTO> rec = new ArrayList<>();
+        for (Multimedium multimedium :
+                multimedia) {
+            rec.add(multimediumMapper.multimediumToPublicMultimediumDTO(multimedium));
         }
         return rec;
     }
