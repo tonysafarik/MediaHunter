@@ -12,7 +12,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>domain</artifactId>
+            <artifactId>data-model</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
