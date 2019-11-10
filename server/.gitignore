@@ -1,5 +1,7 @@
 /target/
-!.mvn/wrapper/maven-wrapper.jar
+
+# https://github.com/takari/maven-wrapper#usage-without-binary-jar
+.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
 .apt_generated
