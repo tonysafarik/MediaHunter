@@ -29,7 +29,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class YouTube implements MediaContentProviderPlugin {
 
     @Autowired
-    private RestTemplate rest;
+    private RestTemplate restTemplate;
 
     /**
      * Preferred way to add name of service - service name must be always the
@@ -51,7 +51,7 @@ public class YouTube implements MediaContentProviderPlugin {
 
         URI uri = buildURIForHTTPRequest("/channels", parameters);
         log.info(uri.toString());
-        YouTubeChannelList channelList = rest.getForObject(uri, YouTubeChannelList.class);
+        YouTubeChannelList channelList = restTemplate.getForObject(uri, YouTubeChannelList.class);
 
         if (channelList != null && channelList.getChannels().size() == 1) {
             YouTubeChannel channel = channelList.getChannels().get(0);
@@ -88,7 +88,7 @@ public class YouTube implements MediaContentProviderPlugin {
 
         URI uri = buildURIForHTTPRequest("/videos", parameters);
 
-        YouTubeVideoList videoList = rest.getForObject(uri, YouTubeVideoList.class);
+        YouTubeVideoList videoList = restTemplate.getForObject(uri, YouTubeVideoList.class);
 
         if (videoList != null && videoList.getVideos().size() == 1) {
             return youTubeVideoToMultimedium(videoList.getVideos().get(0));
@@ -127,7 +127,7 @@ public class YouTube implements MediaContentProviderPlugin {
 
         URI uri = buildURIForHTTPRequest("/playlistItems", parameters);
 
-        YouTubeVideoList videoList = rest.getForObject(uri, YouTubeVideoList.class);
+        YouTubeVideoList videoList = restTemplate.getForObject(uri, YouTubeVideoList.class);
 
         List<Multimedium> videos = new ArrayList<>();
 
@@ -147,7 +147,7 @@ public class YouTube implements MediaContentProviderPlugin {
 
             uri = buildURIForHTTPRequest("/playlistItems", parameters);
 
-            videoList = rest.getForObject(uri, YouTubeVideoList.class);
+            videoList = restTemplate.getForObject(uri, YouTubeVideoList.class);
             if (videoList != null) {
                 for (YouTubeVideo video : videoList.getVideos()) {
                     videos.add(youTubeVideoToMultimedium(video));
@@ -162,7 +162,7 @@ public class YouTube implements MediaContentProviderPlugin {
 
         URI uri = buildURIForHTTPRequest("/channels", parameters);
 
-        Map<String, Object> json = rest.getForObject(uri, Map.class);
+        Map<String, Object> json = restTemplate.getForObject(uri, Map.class);
 
         if ((json == null)
                 || (!json.containsKey("items"))
@@ -187,7 +187,7 @@ public class YouTube implements MediaContentProviderPlugin {
 
         URI uri = buildURIForHTTPRequest("/playlistItems", parameters);
 
-        YouTubeVideoList videoList = rest.getForObject(uri, YouTubeVideoList.class);
+        YouTubeVideoList videoList = restTemplate.getForObject(uri, YouTubeVideoList.class);
 
         List<Multimedium> videos = new ArrayList<>();
 
@@ -211,7 +211,7 @@ public class YouTube implements MediaContentProviderPlugin {
 
             uri = buildURIForHTTPRequest("/playlistItems", parameters);
 
-            videoList = rest.getForObject(uri, YouTubeVideoList.class);
+            videoList = restTemplate.getForObject(uri, YouTubeVideoList.class);
             if (videoList != null) {
                 for (YouTubeVideo video : videoList.getVideos()) {
                     if (video.getUploadTime().isAfter(oldestMultimedium)) {

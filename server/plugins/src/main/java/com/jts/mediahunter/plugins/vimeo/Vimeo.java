@@ -29,7 +29,7 @@ public class Vimeo implements MediaContentProviderPlugin {
     private final String SERVICE_NAME = "Vimeo";
 
     @Autowired
-    private RestTemplate rest;
+    private RestTemplate restTemplate;
 
     @Value("${vimeo.apikey}")
     private String API_KEY;
@@ -50,7 +50,7 @@ public class Vimeo implements MediaContentProviderPlugin {
         String uri = API_URI + "/users/" + channelId;
         VimeoUser user = null;
         try {
-            user = rest.exchange(uri, HttpMethod.GET, new HttpEntity<>("parameters", headers), VimeoUser.class).getBody();
+            user = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>("parameters", headers), VimeoUser.class).getBody();
         } catch (RestClientException e) {
             log.error("Channel on Vimeo with ID " + channelId + " doesn't exist");
         }
@@ -70,7 +70,7 @@ public class Vimeo implements MediaContentProviderPlugin {
         String uri = API_URI + "/videos/" + multimediumExternalID;
         VimeoVideo video = null;
         try {
-            video = rest.exchange(uri, HttpMethod.GET, new HttpEntity<>("parameters", headers), VimeoVideo.class).getBody();
+            video = restTemplate.exchange(uri, HttpMethod.GET, new HttpEntity<>("parameters", headers), VimeoVideo.class).getBody();
         } catch (RestClientException e) {
             log.error("Multimedium on Vimeo with ID " + multimediumExternalID + " doesn't exist");
         }
@@ -116,7 +116,7 @@ public class Vimeo implements MediaContentProviderPlugin {
         do {
             try {
                 log.info(uri);
-                list = rest.exchange(
+                list = restTemplate.exchange(
                         uri,
                         HttpMethod.GET,
                         new HttpEntity<>("parameters", headers),
