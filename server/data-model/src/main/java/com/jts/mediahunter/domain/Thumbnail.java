@@ -5,12 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.persistence.Embeddable;
+
 /**
  *
  * @author Tony
  */
 @Data
 @NoArgsConstructor
+@Embeddable
 public class Thumbnail {
     
     private URI lowResolution;

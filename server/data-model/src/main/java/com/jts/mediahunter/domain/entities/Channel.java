@@ -7,9 +7,8 @@ import com.jts.mediahunter.domain.RecordStage;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.persistence.*;
 
 /**
  * Entity for Channels from any service that has plugin implemented in the
@@ -19,7 +18,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Data
 @Builder
-@Document
+@Entity
+//@Table(indexes = {
+//        @Index(name = "extednal_id_index", columnList = "external_id"),
+//        @Index(name = "trusted_index", columnList = "trusted")
+//})
 public class Channel {
 
     /**
@@ -32,7 +35,6 @@ public class Channel {
      * ID provided by the media service
      */
     @NonNull
-    @Indexed
     private String externalId;
 
     @NonNull
@@ -49,6 +51,7 @@ public class Channel {
      * URI of the channel
      */
     @NonNull
+    @Column(columnDefinition = "STRING")
     private URI uri;
 
     /**
@@ -67,11 +70,11 @@ public class Channel {
      * date and time of last multimedium upload (no matter if waiting, accepted or
      * rejected)
      */
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime lastMultimediumUpload;
 
     @NonNull
     @Builder.Default
-    @Indexed
     private boolean trusted = false;
 
     /**

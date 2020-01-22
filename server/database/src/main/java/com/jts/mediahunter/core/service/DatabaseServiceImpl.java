@@ -34,7 +34,7 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     public Channel putChannelToDB(Channel channel) {
-        Channel newChannel = channelDAO.insert(channel);
+        Channel newChannel = channelDAO.save(channel);
         log.info("Inserted: {}", newChannel.toString());
         return newChannel;
     }
@@ -57,7 +57,8 @@ public class DatabaseServiceImpl implements DatabaseService {
             return;
         }
         if (deleteAllChannelMultimedia) {
-            List<Multimedium> multimedia = multimediumDAO.findByUploader(channel.getExternalId(), channel.getMcpName());
+//            List<Multimedium> multimedia = multimediumDAO.findByUploader(channel.getExternalId(), channel.getMcpName());
+            List<Multimedium> multimedia = null;
             multimediumDAO.deleteAll(multimedia);
         }
         channelDAO.delete(channel);
@@ -71,7 +72,7 @@ public class DatabaseServiceImpl implements DatabaseService {
     @Override
     public String putMultimediumToDB(Multimedium multimedium) {
         multimedium.setStage(RecordStage.WAITING);
-        Multimedium inserted = multimediumDAO.insert(multimedium);
+        Multimedium inserted = multimediumDAO.save(multimedium);
         log.info("Inserted: {}", inserted.toString());
         return inserted.getId();
     }
@@ -108,7 +109,8 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     public List<Multimedium> getWaitingMultimedia() {
-        return multimediumDAO.findWaitingMultimedia();
+//        return multimediumDAO.findWaitingMultimedia();
+        return null;
     }
 
     @Override
@@ -118,8 +120,9 @@ public class DatabaseServiceImpl implements DatabaseService {
 
     @Override
     public List<Multimedium> getMultimediaPage(int page) {
-        return multimediumDAO.findAcceptedMultimedia(PageRequest.of(page, 10,
-                new Sort(Sort.Direction.DESC, "uploadTime"))).getContent();
+        return null;
+//        return multimediumDAO.findAcceptedMultimedia(PageRequest.of(page, 10,
+//                new Sort(Sort.Direction.DESC, "uploadTime"))).getContent();
     }
 
     @Override

@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 @Slf4j
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {DataModelConfiguration.class})
@@ -41,7 +40,7 @@ public class ChannelMapperTest {
     private static Channel channel;
 
     @BeforeClass
-    public static void beforeClass(){
+    public static void beforeClass() {
         channel = Channel.builder()
                 .externalId("externalID")
                 .acceptedMultimediumCount(26L)
@@ -56,19 +55,19 @@ public class ChannelMapperTest {
     }
 
     @Test
-    public void channelToChannelInfoDTO(){
+    public void channelToChannelInfoDTO() {
         ChannelInfoDTO info = mapper.channelToChannelInfoDTO(channel);
         assertThat(info).hasNoNullFieldsOrProperties();
     }
 
     @Test
-    public void channelToChannelPreviewDTO(){
+    public void channelToChannelPreviewDTO() {
         ChannelPreviewDTO find = mapper.channelToChannelPreviewDTO(channel);
         assertThat(find).hasNoNullFieldsOrProperties();
     }
 
     @Test
-    public void channelToPublicChannelDTO(){
+    public void channelToPublicChannelDTO() {
         PublicChannelDTO find = mapper.channelToPublicChannelDTO(channel);
         assertThat(find).hasNoNullFieldsOrProperties();
     }

@@ -7,10 +7,8 @@ import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.persistence.*;
 
 /**
  * Entity for every Multimedium of a Channel (Multimedium can be video, audio, ...)
@@ -19,7 +17,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Data
 @Builder
-@Document
+@Entity
+//@Table(indexes = {
+//        @Index(name = "upload_time_index", columnList = "upload_time"),
+//        @Index(name = "stage_index", columnList = "stage")
+//})
 public class Multimedium {
 
     /**
@@ -59,13 +61,14 @@ public class Multimedium {
     /**
      * URIs of thumbnail pictures (if available)
      */
+    @Embedded
     private Thumbnail thumbnail;
 
     /**
      * date and time of upload of the multimedium (used for sorting)
      */
     @NonNull
-    @Indexed(direction = IndexDirection.DESCENDING, name = "uploadTime")
+    @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime uploadTime;
 
     /**
@@ -75,7 +78,7 @@ public class Multimedium {
 
     @NonNull
     @Builder.Default
-    @Indexed(direction = IndexDirection.ASCENDING, name = "stage")
+    @Enumerated(EnumType.ORDINAL)
     private RecordStage stage = RecordStage.UNKNOWN;
     
     /**

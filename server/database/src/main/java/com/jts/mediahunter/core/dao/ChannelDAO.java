@@ -1,16 +1,17 @@
 package com.jts.mediahunter.core.dao;
 
 import com.jts.mediahunter.domain.entities.Channel;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.List;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
  *
  * @author Tony
  */
-public interface ChannelDAO extends MongoRepository<Channel, String> {
+public interface ChannelDAO extends JpaRepository<Channel, String> {
     
-    public List<Channel> findByExternalId(String channelId);
+    List<Channel> findByExternalId(String channelId);
 
-    public List<Channel> findByTrustedIsTrue();
+    List<Channel> findByTrustedIsTrue();
 }
